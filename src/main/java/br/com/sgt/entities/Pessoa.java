@@ -8,9 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@Table(name="t_pessoa")
 @Entity
 public class Pessoa implements Serializable{
 
@@ -19,7 +21,7 @@ public class Pessoa implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID_PESSOA")
-	private Integer idPessoa;
+	private Long idPessoa;
 	
 	@Column(name="CPF", unique=true, nullable=false)
 	private String cpf;
@@ -56,7 +58,7 @@ public class Pessoa implements Serializable{
 	private String telefoneResidencial;
 	
 	@Column(name="ID_TERREIRO", nullable=false)
-	private Integer idTerreiro;
+	private Long idTerreiro;
 	
 
 	public Pessoa() {
@@ -64,12 +66,12 @@ public class Pessoa implements Serializable{
 	}
 
 
-	public Integer getIdPessoa() {
+	public Long getIdPessoa() {
 		return idPessoa;
 	}
 
 
-	public void setIdPessoa(Integer idPessoa) {
+	public void setIdPessoa(Long idPessoa) {
 		this.idPessoa = idPessoa;
 	}
 
@@ -184,12 +186,12 @@ public class Pessoa implements Serializable{
 	}
 
 
-	public Integer getIdTerreiro() {
+	public Long getIdTerreiro() {
 		return idTerreiro;
 	}
 
 
-	public void setIdTerreiro(Integer idTerreiro) {
+	public void setIdTerreiro(Long idTerreiro) {
 		this.idTerreiro = idTerreiro;
 	}
 
