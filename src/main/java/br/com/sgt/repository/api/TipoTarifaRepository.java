@@ -11,6 +11,8 @@ public interface TipoTarifaRepository {
 	
 	TipoTarifa atualizar(TipoTarifa tipoTarifa);
 	
+	TipoTarifa buscarPorId(Long id);
+	
 	List<TipoTarifa> buscarPorFiltro(FiltroTipoTarifa filtroTipoTarifa);
 	
 	void excluir(TipoTarifa tipoTarifa);
