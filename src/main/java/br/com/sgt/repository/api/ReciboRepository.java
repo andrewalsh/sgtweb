@@ -1,4 +1,4 @@
-package br.com.sgt.repository;
+package br.com.sgt.repository.api;
 
 import java.util.List;
 

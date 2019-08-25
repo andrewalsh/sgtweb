@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +16,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.mysql.fabric.xmlrpc.base.Array;
 
 @Table(name="t_socio")
 @Entity
@@ -46,7 +45,9 @@ public class Socio implements Serializable{
 	
 
 	public Socio() {
-		// TODO Auto-generated constructor stub
+		if(Objects.isNull(pessoa)) {
+			setPessoa(new Pessoa());
+		}
 	}
 
 

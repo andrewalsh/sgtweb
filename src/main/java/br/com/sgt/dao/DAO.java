@@ -65,6 +65,14 @@ public class DAO<T> {
 		em.close();
 	}
 	
+	
+	public T buscaPorId(Long id) {
+		EntityManager em = new JPAUtil().getEntityManager();
+		T instancia = em.find(classe, id);
+		em.close();
+		return instancia;
+	}
+	
 	public List<T> buscarPorFiltro(Filtro<T> filtro) {
 		EntityManager em = new JPAUtil().getEntityManager();
 		CriteriaQuery<T> query = em.getCriteriaBuilder().createQuery(classe);
