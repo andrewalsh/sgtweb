@@ -11,6 +11,8 @@ public interface ValorAutorizadoRepository {
 	
 	ValorAutorizado atualizar(ValorAutorizado valorAutorizado);
 	
+	ValorAutorizado buscaPorId(Long id);
+	
 	List<ValorAutorizado> buscarPorFiltro(FiltroValorAutorizado filtroValorAutorizado);
 	
 	void excluir(ValorAutorizado valorAutorizado);
