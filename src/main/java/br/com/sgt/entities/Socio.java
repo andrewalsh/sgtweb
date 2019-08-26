@@ -40,7 +40,7 @@ public class Socio implements Serializable{
 	private Integer idTerreiro;
 	
 	@OneToOne
-	@JoinColumn(name="idPessoa",referencedColumnName="idPessoa",nullable=false)
+	@JoinColumn(name="ID_PESSOA",nullable=false)
 	private Pessoa pessoa;
 	
 
