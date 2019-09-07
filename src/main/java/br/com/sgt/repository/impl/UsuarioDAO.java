@@ -2,6 +2,10 @@ package br.com.sgt.repository.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
 import br.com.sgt.dao.DAO;
 import br.com.sgt.entities.Usuario;
 import br.com.sgt.repository.api.UsuarioRepository;
@@ -9,10 +13,18 @@ import br.com.sgt.repository.filtro.FiltroUsuario;
 
 public class UsuarioDAO implements UsuarioRepository {
 	
+	@Inject
+	private EntityManager em;
+	
 	private DAO<Usuario> dao;
 	
 	public UsuarioDAO() {
-		dao = new DAO<Usuario>(Usuario.class);
+		
+	}
+	
+	@PostConstruct
+	void init(){
+		dao = new DAO<Usuario>(em, Usuario.class);
 	}
 
 	public Usuario salavar(Usuario usuario) {

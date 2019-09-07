@@ -1,0 +1,55 @@
+.ui-widget, .ui-widget .ui-widget{
+    font-size: 90%;
+}
+
+.bordas{
+	border: none;
+	margin: 0 0 0 ;   
+}
+
+.menu{
+	top: 31px;
+	width: 200px;
+	position: fixed;
+}
+
+.cabecalho{
+	background-image: linear-gradient(to bottom,#1e94d2,#3232cd);
+	
+	position: fixed;
+	top: 0;
+	right: 0px;
+	left: 0px;
+	min-height: 30px;
+	text-align: center;
+	
+}
+
+.texto-cabecalho{
+	font-size: 20px;
+	color: white;
+}
+
+.principal{
+	padding: 0 201px;
+	margin-top: 31px;
+	overflow: auto;
+}
+
+
+body {
+	margin: 0;
+	font-size: 13px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+.ui-tabView{
+	border: none;
+}
+
+@media (max-width: 1024px) {
+	.principal {
+		margin-left: 201px;
+	}
+	

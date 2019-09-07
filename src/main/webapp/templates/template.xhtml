@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:insert name="metadata" />
+
+<h:head>
+	<title>SGT - [Sistema de Gerenciamento de Terreiros]</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<h:outputStylesheet library="css" name="default.css" />
+	<script type="text/javascript">
+		// função para desabilitar a tecla F5.
+		window.onkeydown = function(e) {
+			if (e.keyCode === 116) {
+				alert("Função não permitida");
+				e.keyCode = 0;
+				e.returnValue = false;
+				return false;
+			}
+
+		}
+	</script>
+</h:head>
+<body>
+	<div id="tudo">
+		
+		<header class="cabecalho">
+
+			<p:outputLabel value="SGT - Sistema de Gerenciamento de Terreiros"
+				styleClass="texto-cabecalho" />
+			<p:outputLabel value=" - Usuário:"
+				styleClass="texto-cabecalho"
+				/>
+
+		</header>
+
+		<aside class="menu">
+			<h:panelGroup>
+				<ui:include src="menu.xhtml" />
+			</h:panelGroup>
+			
+		</aside>
+
+		<section class="principal">
+			
+			<p:messages id="msg" showDetail="true" autoUpdate="true"
+				closable="true" />
+			<ui:insert name="conteudo" />
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<h:panelGrid columns="1">
+					<p:outputLabel value="Carregando..."/>
+					<p:graphicImage library="images" name="ajax-loader.gif"/>
+				</h:panelGrid>
+				
+			</p:dialog>
+		</section>
+	</div>
+
+</body>
+</html>

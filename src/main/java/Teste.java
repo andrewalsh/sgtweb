@@ -7,7 +7,7 @@ public class Teste {
 		TipoTarifa tipoTarifa = new TipoTarifa();
 		
 		tipoTarifa.setIdTerreiro(1);
-		tipoTarifa.setNomeTipoTarifa("Teste");
+		tipoTarifa.setNomeTipoTarifa("Teste 2");
 		
 		TipoTarifaBoundary boundary = new TipoTarifaBoundary();
 		

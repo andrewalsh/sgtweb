@@ -1,6 +1,7 @@
 package br.com.sgt.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +35,11 @@ public class ValorAutorizado implements Serializable{
 	@JoinColumn(name="ID_TARIFA", nullable=false)
 	private Tarifa tarifa;
 
+	@Column(name="DESCONTO", precision=2, scale=2, nullable=true)
+	private BigDecimal desconto;
+	
+	@Column(name="ACRESCIMO", precision=2, scale=2, nullable=true)
+	private BigDecimal acrescimo;
 	
 	public ValorAutorizado() {
 		// TODO Auto-generated constructor stub
@@ -77,6 +83,25 @@ public class ValorAutorizado implements Serializable{
 
 	public void setTarifa(Tarifa tarifa) {
 		this.tarifa = tarifa;
+	}
+	
+	public BigDecimal getDesconto() {
+		return desconto;
+	}
+
+
+	public void setDesconto(BigDecimal desconto) {
+		this.desconto = desconto;
+	}
+
+
+	public BigDecimal getAcrescimo() {
+		return acrescimo;
+	}
+
+
+	public void setAcrescimo(BigDecimal acrescimo) {
+		this.acrescimo = acrescimo;
 	}
 
 

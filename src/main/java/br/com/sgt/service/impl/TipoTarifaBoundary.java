@@ -2,6 +2,8 @@ package br.com.sgt.service.impl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.sgt.entities.TipoTarifa;
 import br.com.sgt.repository.api.TipoTarifaRepository;
 import br.com.sgt.repository.filtro.FiltroTipoTarifa;
@@ -9,6 +11,7 @@ import br.com.sgt.repository.impl.TipoTarifaDAO;
 import br.com.sgt.service.api.TipoTarifaService;
 
 public class TipoTarifaBoundary implements TipoTarifaService {
+	
 	
 	private TipoTarifaRepository tipoTarifaRepository = new TipoTarifaDAO();
 
@@ -50,6 +53,12 @@ public class TipoTarifaBoundary implements TipoTarifaService {
 	public void excluir(TipoTarifa tipoTarifa) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean descricaoExiste(String descicao) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

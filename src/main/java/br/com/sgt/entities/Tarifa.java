@@ -29,10 +29,10 @@ public class Tarifa implements Serializable{
 	@Column(name="VALOR", precision=3, scale=2, nullable=false)
 	private BigDecimal valor;
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name="idTipoTarifa", nullable=false)
-	private TipoTarifa tipoTarifa;
-
+	private TipoTarifa tipoTarifa;*/
+	
 	
 	public Tarifa() {
 		// TODO Auto-generated constructor stub
@@ -69,14 +69,14 @@ public class Tarifa implements Serializable{
 	}
 
 
-	public TipoTarifa getTipoTarifa() {
+	/*public TipoTarifa getTipoTarifa() {
 		return tipoTarifa;
 	}
 
 
 	public void setTipoTarifa(TipoTarifa tipoTarifa) {
 		this.tipoTarifa = tipoTarifa;
-	}
+	}*/
 
 
 	@Override
@@ -121,8 +121,8 @@ public class Tarifa implements Serializable{
 		builder.append(nomeTarifa);
 		builder.append(", valor=");
 		builder.append(valor);
-		builder.append(", tipoTarifa=");
-		builder.append(tipoTarifa);
+		/*builder.append(", tipoTarifa=");
+		builder.append(tipoTarifa);*/
 		builder.append("]");
 		return builder.toString();
 	}

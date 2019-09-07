@@ -17,4 +17,5 @@ public interface TipoTarifaService {
 	
 	void excluir(TipoTarifa tipoTarifa);
 
+	boolean descricaoExiste(String descicao);
 }

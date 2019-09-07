@@ -1,16 +1,23 @@
 package br.com.sgt.service.impl;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.sgt.entities.Socio;
+import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.api.SocioRepository;
 import br.com.sgt.repository.filtro.FiltroSocio;
-import br.com.sgt.repository.impl.SocioDAO;
 import br.com.sgt.service.api.SocioService;
 
-public class SocioBoundary implements SocioService {
+public class SocioBoundary implements SocioService, Serializable {
 	
-	private SocioRepository socioRepository = new SocioDAO();
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private SocioRepository socioRepository;
 
 	public Socio salvar(Socio socio) {
 		Socio toReturn = new Socio();
@@ -42,9 +49,16 @@ public class SocioBoundary implements SocioService {
 		return toReturn;
 	}
 
-	public List<Socio> buscarPorFiltro(FiltroSocio filtroSocio) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SocioDTO> buscarPorFiltro(FiltroSocio filtroSocio) {
+		List<SocioDTO> socios = new ArrayList<>();
+		try {
+			socios = socioRepository.buscarPorFiltro(filtroSocio);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+		
+		
+		return socios;
 	}
 
 	public void excluir(Socio socio) {
