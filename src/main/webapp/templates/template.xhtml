@@ -41,7 +41,7 @@
 
 		<aside class="menu">
 			<h:panelGroup>
-				<ui:include src="menu.xhtml" />
+				
 			</h:panelGroup>
 			
 		</aside>
@@ -51,15 +51,6 @@
 			<p:messages id="msg" showDetail="true" autoUpdate="true"
 				closable="true" />
 			<ui:insert name="conteudo" />
-			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
-			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
-				closable="false" resizable="false" showHeader="false">
-				<h:panelGrid columns="1">
-					<p:outputLabel value="Carregando..."/>
-					<p:graphicImage library="images" name="ajax-loader.gif"/>
-				</h:panelGrid>
-				
-			</p:dialog>
 		</section>
 	</div>
 
