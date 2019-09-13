@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+	
+	<ui:define name="conteudo">
+	
+		<h:form id="frmToolbar">
+			<p:toolbar style="margin-left:20px; margin-right: 20px; margin-top: 30px;">
+				<f:facet name="left">
+					<p:commandButton value="Novo" icon="fa fa-plus" 
+						actionListener="#{sociosListController.navega()}"/>
+					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
+					<p:commandButton  value="Consultar" icon="fa fa-file" 
+						actionListener="#{socioFormController.socio}"/>
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		
+		<h:form id="formSocio" style="margin-left:20px; margin-right: 20px; margin-top: 2px;">
+			<p:tabView id="viewSocio" activeIndex="0">
+				<p:tab title="Dados Pessoais">
+					<h:panelGrid columns="4" id="pnlSocio">
+						
+						<p:outputLabel value="Nome" for="nome"/>
+						<p:inputText 
+							id="nome" required="true" requiredMessage="Nome Obrigatório"
+							value="#{socioFormController.socio.pessoa.nome}" size="40"/>
+							
+						<p:outputLabel value="CPF" for="cpf"/>
+						<p:inputMask mask="999.999.999-99" size="15"
+							id="cpf" required="true" requiredMessage="CPF Obrigatório"
+							value="#{socioFormController.socio.pessoa.cpf}">
+						</p:inputMask>
+						
+						<h:outputLabel value="Nascimento:" />
+						<p:calendar size="10" value="#{socioFormController.socio.pessoa.nascimento}"
+							locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+							yearRange="1900:2020" />
+							
+						<h:outputLabel value="E-mail:" />
+						<p:inputText size="40" value="#{socioFormController.socio.pessoa.email}" />
+						
+						<h:outputLabel value="Tel. Celular 1:" />
+						<p:inputMask mask="(99)99999-9999" size="15"
+							value="#{socioFormController.socio.pessoa.telefoneCelular1}" />
+
+						<h:outputLabel value="Tel. Celular 2:" />
+						<p:inputMask mask="(99)99999-9999" size="15"
+							value="#{socioFormController.socio.pessoa.telefoneCelular2}" />
+
+						<h:outputLabel value="Tel. Residêncial:" />
+						<p:inputMask mask="(99)9999-9999" size="15"
+							value="#{socioFormController.socio.pessoa.telefoneResidencial}" />
+						
+						<h:outputLabel value=" " />
+						<h:outputLabel value=" " />
+						
+						<h:outputLabel value="Endereço Residencial:" />
+						<p:inputText size="50"
+							value="#{socioFormController.socio.pessoa.enderecoResidencial}"
+							style="text-transform: uppercase" />
+					</h:panelGrid>
+				</p:tab>
+				
+				<p:tab title="Autorização de Valores">
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Tarifa:" for="tarifa"/>
+						<p:selectOneMenu 
+							id="tarifa" required="true">
+							<f:selectItem itemLabel="Selecione" itemValue="#{null}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Valor:"/>
+						<p:outputLabel/>
+						
+						<p:outputLabel value="Desconto"/>
+						<p:inputText/>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,6 +1,10 @@
 package br.com.sgt.entities.dto;
 
-public class SocioDTO {
+import java.io.Serializable;
+
+public class SocioDTO implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Long idSocio;
 	private String nome;
@@ -36,5 +40,25 @@ public class SocioDTO {
 	public String getTelefoneResidencial() {
 		return telefoneResidencial;
 	}
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SocioDTO [idSocio=");
+		builder.append(idSocio);
+		builder.append(", nome=");
+		builder.append(nome);
+		builder.append(", tipoSocio=");
+		builder.append(tipoSocio);
+		builder.append(", telefoneCelular=");
+		builder.append(telefoneCelular);
+		builder.append(", telefoneResidencial=");
+		builder.append(telefoneResidencial);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 	
 }

@@ -18,26 +18,41 @@ and open the template in the editor.
 		<h:form id="frmToolbar">
 			<p:toolbar style="margin-left:20px; margin-right: 20px; margin-top: 30px;">
 				<f:facet name="left">
-					<p:commandButton type="button" value="Novo" icon="fa fa-plus" />
+					<p:commandButton value="Novo" icon="fa fa-plus" 
+						actionListener="#{sociosListController.navega()}"/>
 					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
 					<p:commandButton type="button" value="Consultar" icon="fa fa-file" />
 				</f:facet>
 			</p:toolbar>
 		</h:form>
-		<h:form id="frmSocioPesquisa" style="margin-left:20px; margin-right: 20px; margin-top: 30px;">
-			<p:dataTable value="#{sociosController.socios}" var="socio"
+		<h:form id="frmSocioPesquisa" style="margin-left:20px; margin-right: 20px; margin-top: 2px;">
+			<p:dataTable value="#{sociosListController.socios}" var="socio"
 				paginator="true" rows="10"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="10,20,50" selectionMode="single"
 				selection="#{socio}" rowKey="#{socio.idSocio}">
 
-				<p:ajax event="rowSelect" listener="#{sociosController.onRowSelect}" />
-				<p:ajax event="rowUnselect" listener="#{sociosController.onRowUnselect}" />
+				<p:ajax event="rowSelect" listener="#{sociosListController.onRowSelect}" />
+				<p:ajax event="rowUnselect" listener="#{sociosListController.onRowUnselect}" />
 
 				<f:facet name="header">Sócios cadastrados</f:facet>
 
 				<p:column>
 					<h:outputText value="#{socio.nome}" />
+				</p:column>
+				
+				<p:column>
+					<h:outputText value="#{socio.tipoSocio}" />
+				</p:column>
+				
+				
+				<p:column>
+					<h:outputText value="#{socio.telefoneCelular}" />
+				</p:column>
+				
+				
+				<p:column>
+					<h:outputText value="#{socio.telefoneResidencial}" />
 				</p:column>
 			</p:dataTable>
 
