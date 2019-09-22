@@ -42,7 +42,13 @@ public class ValorAutorizado implements Serializable{
 	private BigDecimal acrescimo;
 	
 	public ValorAutorizado() {
-		// TODO Auto-generated constructor stub
+		this.idTerreiro = 1;
+	}
+	
+	public ValorAutorizado(Tarifa tarifa, Socio socio) {
+		this.tarifa = tarifa;
+		this.socio = socio;
+		this.idTerreiro = 1;
 	}
 
 

@@ -12,6 +12,10 @@ public class SocioDTO implements Serializable{
 	private String telefoneCelular;
 	private String telefoneResidencial;
 	
+	public SocioDTO() {
+		
+	}
+	
 	public SocioDTO(Long idSocio, String nome, String tipoSocio, String telefoneCelular, String telefoneResidencial) {
 		this.idSocio = idSocio;
 		this.nome = nome;

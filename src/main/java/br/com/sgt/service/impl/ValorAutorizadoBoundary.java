@@ -3,12 +3,19 @@ package br.com.sgt.service.impl;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import javax.inject.Inject;
+import javax.management.RuntimeErrorException;
+
+import br.com.sgt.entities.Socio;
+import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
+import br.com.sgt.repository.api.ValorAutorizadoRepository;
 import br.com.sgt.service.api.ValorAutorizadoService;
 
 public class ValorAutorizadoBoundary implements ValorAutorizadoService{
 	
-	//private static final String[] TIPO_SOCIO = {"COLABORADOR","EFETIVO","VOLUNTÁRIO","ALUNO"};
+	@Inject
+	private ValorAutorizadoRepository valorAutorizadoRepository;
 
 	@Override
 	public boolean autorizacaoValida(ValorAutorizado va) {
@@ -31,6 +38,27 @@ public class ValorAutorizadoBoundary implements ValorAutorizadoService{
 	}
 	
 	
+	public ValorAutorizado salvar(ValorAutorizado va) {
+		try {
+			return valorAutorizadoRepository.salavar(va);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+	
+	
+	private boolean novoValorAutorizadoNaoFoiCadastrado() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	private boolean possuiMenosDeTresTarifas(ValorAutorizado va) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 	private boolean descontoValido(ValorAutorizado va) {
 		boolean toReturn = false;
 		if(Objects.nonNull(va)) {
@@ -44,6 +72,19 @@ public class ValorAutorizadoBoundary implements ValorAutorizadoService{
 			}
 		}
 		return toReturn;
+	}
+
+
+	@Override
+	public ValorAutorizado associarValor(Tarifa tarifa, Socio socio) {
+		try {
+			if(Objects.nonNull(tarifa) && Objects.nonNull(socio))
+				return new ValorAutorizado(tarifa, socio);
+			else
+				throw new RuntimeException("O sócio e/ou tarifa não podem estar vazios");
+		} catch (RuntimeException e) {
+			throw e;
+		}
 	}
 
 }

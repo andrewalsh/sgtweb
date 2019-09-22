@@ -19,43 +19,25 @@ public class DAO<T> {
 	
 	public T adiciona(T t) {
 		T persistencia;
-		// consegue a entity manager
 
-		// abre transacao
-		em.getTransaction().begin();
-
-		// persiste o objeto
 		persistencia = em.merge(t);
 
-		// commita a transacao
-		em.getTransaction().commit();
-		
 		return persistencia;
 	}
 	
 	
 	public T atualizar(T t) {
 		T persistencia;
-		// consegue a entity manager
 
-		// abre transacao
-		em.getTransaction().begin();
-
-		// persiste o objeto
 		persistencia = em.merge(t);
 
-		// commita a transacao
-		em.getTransaction().commit();
-		
 		return persistencia;
 	}
 	
 	public void remove(T t) {
-		em.getTransaction().begin();
 
 		em.remove(em.merge(t));
 
-		em.getTransaction().commit();
 	}
 	
 	

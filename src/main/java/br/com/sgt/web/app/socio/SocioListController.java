@@ -32,7 +32,7 @@ public class SocioListController implements Serializable{
 	
 	private List<SocioDTO> socios = new ArrayList<>();
 	
-	SocioDTO socio;
+	private SocioDTO socio = new SocioDTO();
 	
 	@Inject
 	SocioService socioService;
@@ -52,6 +52,19 @@ public class SocioListController implements Serializable{
 		socio = (SocioDTO)event.getObject();
 		System.out.println(socio);
     }
+	
+	public void onRowDblClckSelect(SelectEvent event) {
+		socio = (SocioDTO)event.getObject();
+		try {
+			//FacesContext.getCurrentInstance().getExternalContext().redirect("/sgt/pages/socios_form.xhtml");
+			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			ec.redirect("socios_form.xhtml?dto="+getSocio().getIdSocio());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
  
     public void onRowUnselect(UnselectEvent event) {
     }
@@ -60,7 +73,7 @@ public class SocioListController implements Serializable{
 		try {
 			//FacesContext.getCurrentInstance().getExternalContext().redirect("/sgt/pages/socios_form.xhtml");
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-			ec.redirect("socios_form.xhtml");
+			ec.redirect("socios_form.xhtml?dto="+getSocio());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,6 +88,10 @@ public class SocioListController implements Serializable{
 
 	public void setSocios(List<SocioDTO> socios) {
 		this.socios = socios;
+	}
+	
+	public SocioDTO getSocio() {
+		return socio;
 	}
 
 }

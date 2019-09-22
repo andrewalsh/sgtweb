@@ -32,13 +32,11 @@ public class ValorAutorizadoDAO implements ValorAutorizadoRepository, Serializab
 	}
 	
 	public ValorAutorizado salavar(ValorAutorizado valorAutorizado) {
-		ValorAutorizado toReturn = new ValorAutorizado();
 		try {
-			toReturn = dao.adiciona(valorAutorizado);
+			return dao.adiciona(valorAutorizado);
 		} catch (RuntimeException e) {
 			throw e;
 		}
-		return toReturn;
 	}
 
 	public ValorAutorizado atualizar(ValorAutorizado valorAutorizado) {

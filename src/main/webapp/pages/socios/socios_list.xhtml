@@ -19,7 +19,9 @@ and open the template in the editor.
 			<p:toolbar style="margin-left:20px; margin-right: 20px; margin-top: 30px;">
 				<f:facet name="left">
 					<p:commandButton value="Novo" icon="fa fa-plus" 
-						actionListener="#{sociosListController.navega()}"/>
+						action="#{sociosListController.navega()}">
+						<p:ajax event="click"/>
+					</p:commandButton>
 					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
 					<p:commandButton type="button" value="Consultar" icon="fa fa-file" />
 				</f:facet>
@@ -34,6 +36,7 @@ and open the template in the editor.
 
 				<p:ajax event="rowSelect" listener="#{sociosListController.onRowSelect}" />
 				<p:ajax event="rowUnselect" listener="#{sociosListController.onRowUnselect}" />
+				<p:ajax event="rowDblselect" listener="#{sociosListController.onRowDblClckSelect}"/>
 
 				<f:facet name="header">Sócios cadastrados</f:facet>
 
