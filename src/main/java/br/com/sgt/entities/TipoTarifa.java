@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name="tipo_tarifa")
+@Table(name="t_tipo_tarifa")
 @Entity
 public class TipoTarifa implements Serializable{
 

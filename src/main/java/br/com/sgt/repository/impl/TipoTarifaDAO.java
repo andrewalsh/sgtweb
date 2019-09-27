@@ -2,6 +2,10 @@ package br.com.sgt.repository.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
 import br.com.sgt.dao.DAO;
 import br.com.sgt.entities.TipoTarifa;
 import br.com.sgt.repository.api.TipoTarifaRepository;
@@ -10,9 +14,17 @@ import br.com.sgt.repository.filtro.FiltroTipoTarifa;
 public class TipoTarifaDAO implements TipoTarifaRepository {
 	
 	private DAO<TipoTarifa> dao;
+	
+	@Inject
+	private EntityManager em;
 
 	public TipoTarifaDAO() {
-		this.dao = new DAO<TipoTarifa>(TipoTarifa.class);
+		
+	}
+	
+	@PostConstruct
+	void init() {
+		new DAO<TipoTarifa>(em, TipoTarifa.class);
 	}
 
 	public TipoTarifa salavar(TipoTarifa tipoTarifa) {

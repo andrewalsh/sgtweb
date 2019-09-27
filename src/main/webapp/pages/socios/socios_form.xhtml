@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+	
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:event listener="#{socioFormController.getParams()}" type="preRenderView"/>
+		</f:metadata>
+	
+		<h:form id="frmToolbar">
+			<p:toolbar >
+				<f:facet name="left">
+					<p:commandButton value="Novo" icon="fa fa-plus" 
+						actionListener="#{sociosListController.navega()}"/>
+						
+					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
+					
+					<p:commandButton  value="Consultar" icon="fa fa-file" 
+						actionListener="#{socioFormController.socio}"/>
+						
+					<p:commandButton  value="Salvar" icon="fa fa-fa-floppy-o" 
+						actionListener="#{socioFormController.salvar()}"/>
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+		
+		<h:form id="formSocio" style=" margin-top: 2px;">
+			<p:tabView id="viewSocio" activeIndex="0">
+				<p:tab title="Dados Pessoais">
+					<h:panelGrid columns="4" id="pnlSocio">
+						
+						<p:outputLabel value="Nome" for="nome"/>
+						<p:inputText 
+							id="nome" required="true" requiredMessage="Nome Obrigatório"
+							value="#{socioFormController.socio.pessoa.nome}" size="40">
+							<p:ajax event="change"/>
+						</p:inputText>
+							
+						<p:outputLabel value="CPF" for="cpf"/>
+						<p:inputMask mask="999.999.999-99" size="15"
+							id="cpf" required="true" requiredMessage="CPF Obrigatório"
+							value="#{socioFormController.socio.pessoa.cpf}">
+							<p:ajax event="change"/>
+						</p:inputMask>
+						
+						<h:outputLabel value="Nascimento:" />
+						<p:calendar size="10" value="#{socioFormController.socio.pessoa.nascimento}"
+							locale="pt_BR" mask="true"  pattern="dd/MM/yyyy" >
+							<p:ajax event="dateSelect" />
+							<p:ajax event="blur" />
+						</p:calendar>
+							
+						<h:outputLabel value="E-mail:" />
+						<p:inputText size="40" value="#{socioFormController.socio.pessoa.email}" >
+							<p:ajax event="change"/>
+						</p:inputText>
+						
+						<h:outputLabel value="Tel. Celular 1:" />
+						<p:inputMask mask="(99)99999-9999" size="15"
+							value="#{socioFormController.socio.pessoa.telefoneCelular1}" >
+							<p:ajax event="change"/>
+						</p:inputMask>
+
+						<h:outputLabel value="Tel. Celular 2:" />
+						<p:inputMask mask="(99)99999-9999" size="15"
+							value="#{socioFormController.socio.pessoa.telefoneCelular2}">
+							<p:ajax event="change"/>
+						</p:inputMask>
+
+						<h:outputLabel value="Tel. Residêncial:" />
+						<p:inputMask mask="(99)9999-9999" size="15"
+							value="#{socioFormController.socio.pessoa.telefoneResidencial}" >
+							<p:ajax event="change"/>
+						</p:inputMask>
+						
+						<h:outputLabel value="Tipo de Sócio" for="tipoSocio" />
+						<p:selectOneMenu value="#{socioFormController.socio.tipoSocio}"
+							id="tipoSocio" required="true" requiredMessage="Selecione um tipo de Sócio">
+							<f:selectItem itemLabel="Selecione" itemValue="#{null}"/>
+							<f:selectItem itemLabel="Colaborador" itemValue="COLABORADOR"/>
+							<f:selectItem itemLabel="Efetivo" itemValue="EFETIVO"/>
+							<f:selectItem itemLabel="Voluntário" itemValue="VOLUNTARIO"/>
+							<p:ajax event="itemSelect"/>
+						</p:selectOneMenu>
+						
+						<h:outputLabel value="Endereço Residencial:" />
+						<p:inputText size="50"
+							value="#{socioFormController.socio.pessoa.enderecoResidencial}">
+							<p:ajax event="change"/>
+						</p:inputText>
+					</h:panelGrid>
+				</p:tab>
+				
+				<p:tab title="Autorização de Valores">
+					<h:panelGrid columns="2">
+						<p:commandButton value="Adicionar nova tarifa" styleClass="ui-priority-primary" process="@this"
+							oncomplete="PF('popUpValorAutorizado').show();"/>
+					</h:panelGrid>
+					
+					<p:dataTable 
+						id="tblValorAutorizado"
+						value="#{socioFormController.socio.valorAutorizado}" 
+						var="valorAutorizado">
+						<p:column headerText="Tarifa | Mensalidade">
+							<h:outputText value="#{valorAutorizado.tarifa.nomeTarifa}" />
+						</p:column>
+						<p:column headerText="Valor Bruto">
+							<h:outputText value="#{valorAutorizado.tarifa.valor}" />
+						</p:column>
+						
+						<p:column headerText="Valor Real">
+							<h:outputText value="#{valorAutorizado.tarifa.valor}" />
+						</p:column>
+						
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+		
+		<h:form id="formPopUp">
+			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizado" modal="true" closable="true" height="150">
+    			<h:panelGrid columns="2">
+    				<h:outputLabel value="Tarifa" />
+    				<p:selectOneMenu value="#{socioFormController.idTarifa}">
+    					<f:selectItem itemLabel="Selecione..." itemValue=""/>
+    					<f:selectItems value="#{socioFormController.tarifas}" var="tarifa"
+    						itemLabel="#{tarifa.nomeTarifa}" itemValue="#{tarifa.idTarifa}"/>
+    					<p:ajax event="itemSelect" update="valorBruto" listener="#{socioFormController.vincularAutorizacaoDeValor()}"/>
+    				</p:selectOneMenu>
+    				
+    				<p:outputLabel value="Valor Bruto"/>
+    				<h:outputText id="valorBruto"
+    					value="#{socioFormController.tarifa.valor}" />
+    					
+    				<p:outputLabel value="Valor Real"/>
+    				<p:inputText id="valorReal"
+    					value="#{socioFormController.tarifa.valor}">
+    					<p:ajax event="change"/>
+    				</p:inputText>
+    				
+    				<p:commandButton value="Adicionar" 
+    					process="@this" 
+    					oncomplete="PF('popUpValorAutorizado').hide();"
+    					update=":formSocio:viewSocio:tblValorAutorizado"></p:commandButton>
+    			</h:panelGrid>
+			</p:dialog>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+</html>
