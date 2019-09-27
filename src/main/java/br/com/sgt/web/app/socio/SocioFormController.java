@@ -53,7 +53,6 @@ public class SocioFormController implements Serializable{
 	
 	@PostConstruct
 	public void init() {
-		
 		try {
 			tarifas = tarifaService.buscarPorFiltro(filtroTarifa);
 		} catch (RuntimeException e) {
@@ -67,9 +66,9 @@ public class SocioFormController implements Serializable{
 	
 	public void salvar() {
 		try {
-			socioService.salvar(socio);
+			socio = socioService.salvar(socio);
 			
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO,null, "Sócio cadastrado com sucesso!");
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO,null, "Operação realizada com sucesso!");
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 	        
@@ -79,6 +78,30 @@ public class SocioFormController implements Serializable{
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 		}
+	}
+	
+	public void setIdTarifa(Long idTarifa) {
+		this.idTarifa = idTarifa;
+		try {
+			tarifa = tarifaService.buscarPorId(idTarifa);
+		} catch (RuntimeException e) {
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+					"Ocorreu um erro ao carregar a Tarifa selecionada: "+e.getMessage());
+	        FacesContext facesContext = FacesContext.getCurrentInstance();
+	        facesContext.addMessage(null, facesMessage);
+		}
+	}
+	
+	public void getParams(){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        Map<String,String> parametro = externalContext.getRequestParameterMap();
+		String valor = parametro.get("dto");
+		popularSocio(valor);
+    }
+	
+	public void addValorAutorizado() {
+		
 	}
 	
 	public Socio getSocio() {
@@ -134,19 +157,6 @@ public class SocioFormController implements Serializable{
 	public void setDescontoOuAcrescimo(BigDecimal descontoOuAcrescimo) {
 		this.descontoOuAcrescimo = descontoOuAcrescimo;
 	}
-
-
-	public void setIdTarifa(Long idTarifa) {
-		this.idTarifa = idTarifa;
-		try {
-			tarifa = tarifaService.buscarPorId(idTarifa);
-		} catch (RuntimeException e) {
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"Ocorreu um erro ao carregar a Tarifa selecionada: "+e.getMessage());
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
-		}
-	}
 	
 	
 	public void abirPopUpAlteracaoDeValor() {
@@ -161,19 +171,10 @@ public class SocioFormController implements Serializable{
 		
 	}
 	
-	public void getParams(){
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = facesContext.getExternalContext();
-        Map<String,String> parametro = externalContext.getRequestParameterMap();
-		String valor = parametro.get("dto");
-		popularSocio(valor);
-    }
-	
 	private void popularSocio(String id) {
 		if(Objects.nonNull(id)) {
 			try {
 				socio = socioService.buscarPorId(Long.valueOf(id));
-				System.out.println(socio);
 			} catch (RuntimeException e) {
 				FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						"Ocorreu um erro ao carregar os dados do sócio selecionado: "+e.getMessage());

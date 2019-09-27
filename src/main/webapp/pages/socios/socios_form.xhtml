@@ -104,26 +104,57 @@ and open the template in the editor.
 				
 				<p:tab title="Autorização de Valores">
 					<h:panelGrid columns="2">
-						<p:outputLabel value="Tarifa:" for="tarifa"/>
-						<p:selectOneMenu value="#{socioFormController.idTarifa}"
-							id="tarifa" required="true">
-							<f:selectItem itemLabel="Selecione" itemValue="#{null}"/>
-							<f:selectItems value="#{socioFormController.tarifas}" var="tarifa"
-								itemLabel="#{tarifa.nomeTarifa}" itemValue="#{tarifa.idTarifa}"/>
-							<p:ajax event="itemSelect" update="valorTarifa" listener="#{socioFormController.vincularAutorizacaoDeValor()}"/>
-						</p:selectOneMenu>
-						
-						<p:outputLabel value="Valor:"/>
-						<p:outputLabel 
-							id="valorTarifa"
-							value="#{socioFormController.tarifa.valor}"/>
-						
-						<p:outputLabel value="_ " style="color:white"/>
-						<p:commandButton value="Alterar valor da Tarifa" 
-							/>
+						<p:commandButton value="Adicionar nova tarifa" styleClass="ui-priority-primary" process="@this"
+							oncomplete="PF('popUpValorAutorizado').show();"/>
 					</h:panelGrid>
+					
+					<p:dataTable 
+						id="tblValorAutorizado"
+						value="#{socioFormController.socio.valorAutorizado}" 
+						var="valorAutorizado">
+						<p:column headerText="Tarifa | Mensalidade">
+							<h:outputText value="#{valorAutorizado.tarifa.nomeTarifa}" />
+						</p:column>
+						<p:column headerText="Valor Bruto">
+							<h:outputText value="#{valorAutorizado.tarifa.valor}" />
+						</p:column>
+						
+						<p:column headerText="Valor Real">
+							<h:outputText value="#{valorAutorizado.tarifa.valor}" />
+						</p:column>
+						
+					</p:dataTable>
 				</p:tab>
 			</p:tabView>
+		</h:form>
+		
+		<h:form id="formPopUp">
+			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizado" modal="true" closable="true" height="150">
+    			<h:panelGrid columns="2">
+    				<h:outputLabel value="Tarifa" />
+    				<p:selectOneMenu value="#{socioFormController.idTarifa}">
+    					<f:selectItem itemLabel="Selecione..." itemValue=""/>
+    					<f:selectItems value="#{socioFormController.tarifas}" var="tarifa"
+    						itemLabel="#{tarifa.nomeTarifa}" itemValue="#{tarifa.idTarifa}"/>
+    					<p:ajax event="itemSelect" update="valorBruto" listener="#{socioFormController.vincularAutorizacaoDeValor()}"/>
+    				</p:selectOneMenu>
+    				
+    				<p:outputLabel value="Valor Bruto"/>
+    				<h:outputText id="valorBruto"
+    					value="#{socioFormController.tarifa.valor}" />
+    					
+    				<p:outputLabel value="Valor Real"/>
+    				<p:inputText id="valorReal"
+    					value="#{socioFormController.tarifa.valor}">
+    					<p:ajax event="change"/>
+    				</p:inputText>
+    				
+    				<p:commandButton value="Adicionar" 
+    					process="@this" 
+    					oncomplete="PF('popUpValorAutorizado').hide();"
+    					update=":formSocio:viewSocio:tblValorAutorizado"></p:commandButton>
+    			</h:panelGrid>
+			</p:dialog>
 		</h:form>
 		
 	</ui:define>
