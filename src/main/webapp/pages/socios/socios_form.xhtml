@@ -138,7 +138,7 @@ and open the template in the editor.
 			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizado" modal="true" closable="true" height="150">
     			<h:panelGrid columns="2" cellpadding="2">
     				<h:outputLabel value="Tarifa" />
-    				<ui:fragment rendered="#{not socioFormController.action.equals('EDITAR')}">
+    				<ui:fragment rendered="#{socioFormController.action.equals('NOVO')}">
     					<p:selectOneMenu value="#{socioFormController.va.tarifa}">
 	    					<f:selectItem itemLabel="Selecione..." itemValue=""/>
 	    					<f:selectItems value="#{socioFormController.tarifas}" var="tarifa"
@@ -156,7 +156,7 @@ and open the template in the editor.
     				<h:outputText id="valorBruto"
     					value="#{socioFormController.va.tarifa.valor}" />
     					
-    				<p:outputLabel value="Valor Real"/>
+    				<p:outputLabel value="Valor Líquido"/>
     				<p:inputText id="valorReal"
     					value="#{socioFormController.va.valorLiquido}">
     					<p:ajax event="change"/>

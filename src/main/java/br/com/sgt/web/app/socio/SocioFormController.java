@@ -195,7 +195,9 @@ public class SocioFormController implements Serializable{
 	
 
 	public void abirPopUpAlteracaoDeValor() {
-		
+		action = "NOVO";
+		RequestContext.getCurrentInstance().update("formPopUp");
+		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizado').show()");
 	}
 	
 	public void vincularAutorizacaoDeValor() {
