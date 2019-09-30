@@ -10,13 +10,10 @@ import javax.inject.Inject;
 
 import br.com.sgt.dao.tx.Transacional;
 import br.com.sgt.entities.Socio;
-import br.com.sgt.entities.Tarifa;
-import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.api.SocioRepository;
 import br.com.sgt.repository.filtro.FiltroSocio;
 import br.com.sgt.service.api.SocioService;
-import br.com.sgt.service.api.ValorAutorizadoService;
 
 public class SocioBoundary implements SocioService, Serializable {
 	
@@ -24,13 +21,9 @@ public class SocioBoundary implements SocioService, Serializable {
 	
 	@Inject
 	private SocioRepository socioRepository;
-	
-	@Inject
-	private ValorAutorizadoService valorAutorizadoService; 
-	
-	private ValorAutorizado va;
 
-	
+
+	@Transacional
 	public Socio salvar(Socio socio) {
 		try {
 			if(Objects.isNull(socio.getIdSocio())) {
@@ -45,15 +38,7 @@ public class SocioBoundary implements SocioService, Serializable {
 	}
 
 	public Socio atualizar(Socio socio) {
-		Socio toReturn = new Socio();
-		try {
-			Socio oldSocio = socioRepository.buscarPorId(socio.getIdSocio());
-			
-			toReturn = socioRepository.atualizar(socio);
-		} catch (RuntimeException e) {
-			throw e;
-		}
-		return toReturn;
+		return null;
 	}
 
 	public Socio buscarPorId(Long id) {
@@ -82,34 +67,19 @@ public class SocioBoundary implements SocioService, Serializable {
 		// TODO Auto-generated method stub
 
 	}
-
-	@Override
-	public void associarValorAutorizadoParaCadastro(Tarifa tarifa, Socio socio) {
-		this.va = new ValorAutorizado(tarifa, socio);
-	}
 	
 	
-	@Transacional
+	
 	private Socio atualizarSocio(Socio socio) {
-		Socio toReturn = new Socio();
-		if(Objects.nonNull(socio)) {
-			try {
-				toReturn = socioRepository.atualizar(socio);
-				if(Objects.nonNull(socio.getValorAutorizado())) {
-					for (int i = 0; i < socio.getValorAutorizado().size(); i++) {
-						valorAutorizadoService.salvar(socio.getValorAutorizado().get(i));
-					}
-				}
-			} catch (RuntimeException e) {
-				throw e;
-			}
-		}else {
-			throw new RuntimeException("Erro ao carregar a lista de valores autorizados do sócio");
+		try {
+			return socioRepository.atualizar(socio);
+			
+		} catch (RuntimeException e) {
+			throw e;
 		}
-		return toReturn;
 	}
 
-	@Transacional
+	
 	private Socio salvarSocio(Socio socio) {
 		Socio toReturn = new Socio();
 		

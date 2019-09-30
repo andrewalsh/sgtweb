@@ -35,12 +35,10 @@ public class ValorAutorizado implements Serializable{
 	@JoinColumn(name="ID_TARIFA", nullable=false)
 	private Tarifa tarifa;
 
-	@Column(name="DESCONTO", precision=2, scale=2, nullable=true)
-	private BigDecimal desconto;
+	@Column(name="VALOR_LIQUIDO", precision=2, scale=2, nullable=true)
+	private BigDecimal valorLiquido;
 	
-	@Column(name="ACRESCIMO", precision=2, scale=2, nullable=true)
-	private BigDecimal acrescimo;
-	
+
 	public ValorAutorizado() {
 		this.idTerreiro = 1;
 	}
@@ -90,38 +88,23 @@ public class ValorAutorizado implements Serializable{
 	public void setTarifa(Tarifa tarifa) {
 		this.tarifa = tarifa;
 	}
-	
-	public BigDecimal getDesconto() {
-		return desconto;
+
+	public BigDecimal getValorLiquido() {
+		return valorLiquido;
 	}
 
-
-	public void setDesconto(BigDecimal desconto) {
-		this.desconto = desconto;
+	public void setValorLiquido(BigDecimal valorLiquido) {
+		this.valorLiquido = valorLiquido;
 	}
-
-
-	public BigDecimal getAcrescimo() {
-		return acrescimo;
-	}
-
-
-	public void setAcrescimo(BigDecimal acrescimo) {
-		this.acrescimo = acrescimo;
-	}
-
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((idTerreiro == null) ? 0 : idTerreiro.hashCode());
-		result = prime * result + ((idValorAutorizado == null) ? 0 : idValorAutorizado.hashCode());
 		result = prime * result + ((socio == null) ? 0 : socio.hashCode());
 		result = prime * result + ((tarifa == null) ? 0 : tarifa.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -132,16 +115,6 @@ public class ValorAutorizado implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		ValorAutorizado other = (ValorAutorizado) obj;
-		if (idTerreiro == null) {
-			if (other.idTerreiro != null)
-				return false;
-		} else if (!idTerreiro.equals(other.idTerreiro))
-			return false;
-		if (idValorAutorizado == null) {
-			if (other.idValorAutorizado != null)
-				return false;
-		} else if (!idValorAutorizado.equals(other.idValorAutorizado))
-			return false;
 		if (socio == null) {
 			if (other.socio != null)
 				return false;
@@ -154,7 +127,6 @@ public class ValorAutorizado implements Serializable{
 			return false;
 		return true;
 	}
-
 
 	@Override
 	public String toString() {

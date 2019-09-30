@@ -19,6 +19,4 @@ public interface SocioService {
 	List<SocioDTO> buscarPorFiltro(FiltroSocio filtroSocio);
 	
 	void excluir(Socio socio);
-	
-	void associarValorAutorizadoParaCadastro(Tarifa tarifa, Socio socio);
 }
