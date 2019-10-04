@@ -2,6 +2,7 @@ package br.com.sgt.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -90,19 +91,24 @@ public class ValorAutorizado implements Serializable{
 	}
 
 	public BigDecimal getValorLiquido() {
-		return valorLiquido;
+		return (Objects.isNull(valorLiquido)) ? tarifa.getValor() : valorLiquido;
 	}
 
 	public void setValorLiquido(BigDecimal valorLiquido) {
 		this.valorLiquido = valorLiquido;
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((idTerreiro == null) ? 0 : idTerreiro.hashCode());
+		result = prime * result + ((idValorAutorizado == null) ? 0 : idValorAutorizado.hashCode());
 		result = prime * result + ((socio == null) ? 0 : socio.hashCode());
 		result = prime * result + ((tarifa == null) ? 0 : tarifa.hashCode());
+		result = prime * result + ((valorLiquido == null) ? 0 : valorLiquido.hashCode());
 		return result;
 	}
 
@@ -115,6 +121,16 @@ public class ValorAutorizado implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		ValorAutorizado other = (ValorAutorizado) obj;
+		if (idTerreiro == null) {
+			if (other.idTerreiro != null)
+				return false;
+		} else if (!idTerreiro.equals(other.idTerreiro))
+			return false;
+		if (idValorAutorizado == null) {
+			if (other.idValorAutorizado != null)
+				return false;
+		} else if (!idValorAutorizado.equals(other.idValorAutorizado))
+			return false;
 		if (socio == null) {
 			if (other.socio != null)
 				return false;
@@ -124,6 +140,11 @@ public class ValorAutorizado implements Serializable{
 			if (other.tarifa != null)
 				return false;
 		} else if (!tarifa.equals(other.tarifa))
+			return false;
+		if (valorLiquido == null) {
+			if (other.valorLiquido != null)
+				return false;
+		} else if (!valorLiquido.equals(other.valorLiquido))
 			return false;
 		return true;
 	}

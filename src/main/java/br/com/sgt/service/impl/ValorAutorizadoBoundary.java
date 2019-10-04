@@ -58,7 +58,7 @@ public class ValorAutorizadoBoundary implements Serializable, ValorAutorizadoSer
 	@Override
 	public List<ValorAutorizado> listarPorSocio(Socio socio) {
 		FiltroValorAutorizado filtro = new FiltroValorAutorizado();
-		filtro.setIdSocio(361L);
+		filtro.setIdSocio(socio.getIdSocio());
 		try {
 			return valorAutorizadoRepository.buscarPorFiltro(filtro);
 		} catch (RuntimeException e) {
@@ -89,7 +89,7 @@ public class ValorAutorizadoBoundary implements Serializable, ValorAutorizadoSer
 
 	private ValorAutorizado salvarValorAutorizado(ValorAutorizado va) {
 		try {
-			if(new GerenciadorDeValorAutorizado().valorAutorizadoParaSocioPermitido(va, listarPorSocio(null))) {
+			if(new GerenciadorDeValorAutorizado().valorAutorizadoParaSocioPermitido(va, listarPorSocio(va.getSocio()))) {
 				return valorAutorizadoRepository.salavar(va);
 			}
 			else
@@ -102,6 +102,15 @@ public class ValorAutorizadoBoundary implements Serializable, ValorAutorizadoSer
 	private ValorAutorizado atualizarValorAutorizado(ValorAutorizado va) {
 		try {
 			return valorAutorizadoRepository.atualizar(va);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public List<ValorAutorizado> listarPorFiltro(FiltroValorAutorizado filtroValorAutorizado) {
+		try {
+			return valorAutorizadoRepository.buscarPorFiltro(filtroValorAutorizado);
 		} catch (RuntimeException e) {
 			throw e;
 		}

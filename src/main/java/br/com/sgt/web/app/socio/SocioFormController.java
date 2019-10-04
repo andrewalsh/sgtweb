@@ -1,6 +1,5 @@
 package br.com.sgt.web.app.socio;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -196,8 +195,8 @@ public class SocioFormController implements Serializable{
 
 	public void abirPopUpAlteracaoDeValor() {
 		action = "NOVO";
-		RequestContext.getCurrentInstance().update("formPopUp");
-		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizado').show()");
+		RequestContext.getCurrentInstance().update("formPopUpNovo");
+		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoNovo').show()");
 	}
 	
 	public void vincularAutorizacaoDeValor() {
@@ -211,32 +210,29 @@ public class SocioFormController implements Serializable{
 	public void onRowDblClckSelect(SelectEvent event) {
 		action = "EDITAR";
 		va = (ValorAutorizado)event.getObject();
-		RequestContext.getCurrentInstance().update("formPopUp");
-		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizado').show()");
-		/*try {
-			//FacesContext.getCurrentInstance().getExternalContext().redirect("/sgt/pages/socios_form.xhtml");
-			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-			ec.redirect("socios_form.xhtml?dto="+getSocio().getIdSocio());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
+		RequestContext.getCurrentInstance().update("formPopUpEditar");
+		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoEditar').show()");
 	}
 	
 	public void salvarValorAutorizado() {
 		try {
+			va.setSocio(socio);
 			valorAutorizadoService.salvar(va);
+			socio.getValorAutorizado();
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					"Operação realizada com sucesso:");
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 		} catch (RuntimeException e) {
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 					"Ocorreu um erro: "+e.getMessage());
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 		}
+	}
+	
+	public void atribuiValorLiquidoValorAutorizado() {
+		va.setValorLiquido(tarifa.getValor());
 	}
 	
 	private void popularSocio(String id) {
