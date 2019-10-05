@@ -16,18 +16,18 @@ and open the template in the editor.
 	<ui:define name="conteudo">
 	
 		<h:form id="frmToolbar">
-			<p:toolbar style="margin-left:20px; margin-right: 20px; margin-top: 30px;">
+			<p:toolbar style="margin-left:0px; margin-right: 20px; ">
 				<f:facet name="left">
-					<p:commandButton value="Novo" icon="fa fa-plus" 
+					<p:commandButton 
+						value="Novo" 
+						icon="fa fa-plus" 
 						action="#{sociosListController.navega()}">
 						<p:ajax event="click"/>
 					</p:commandButton>
-					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
-					<p:commandButton type="button" value="Consultar" icon="fa fa-file" />
 				</f:facet>
 			</p:toolbar>
 		</h:form>
-		<h:form id="frmSocioPesquisa" style="margin-left:20px; margin-right: 20px; margin-top: 2px;">
+		<h:form id="frmSocioPesquisa" style="margin-left:0px; margin-right: 20px; margin-top: 2px;">
 			<p:dataTable value="#{sociosListController.socios}" var="socio"
 				paginator="true" rows="10"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

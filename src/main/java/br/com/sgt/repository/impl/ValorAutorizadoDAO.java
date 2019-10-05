@@ -15,6 +15,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.sgt.dao.DAO;
+import br.com.sgt.entities.Pessoa;
 import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.repository.api.ValorAutorizadoRepository;
@@ -96,6 +97,11 @@ public class ValorAutorizadoDAO implements ValorAutorizadoRepository, Serializab
 		if(Objects.nonNull(filtro.getIdSocio())) {
 			Path<Long> idSocioPath = root.<Socio>get("socio").<Long>get("idSocio");
 			predicates.add(cb.equal(idSocioPath, filtro.getIdSocio()));
+		}
+		
+		if(Objects.nonNull(filtro.getNomeSocio())) {
+			Path<String> nomeSocioPath = root.<Socio>get("socio").<Pessoa>get("pessoa").<String>get("nome");
+			predicates.add(cb.like(nomeSocioPath, filtro.getNomeSocio()+"%"));
 		}
 		
 		return predicates;

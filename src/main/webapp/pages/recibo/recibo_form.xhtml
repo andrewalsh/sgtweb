@@ -16,12 +16,27 @@ and open the template in the editor.
 	<ui:define name="conteudo">
 	
 		<h:form id="frmToolbar">
-			<p:toolbar >
-				<f:facet name="left">
-					<h:outputText value="Nome:" />
-					<p:inputText></p:inputText>
+			<p:dataTable
+				id="tblSocioDTO"
+				value="#{reciboFormController.sociosDTO}"
+				rows="1"
+				var="socio"
+				selectionMode="single"
+				selection="#{socio}"
+				rowKey="#{socio.idSocio}">
+				<f:facet name="header">
+					<h:outputText value="Pesquisa de Sócios" />
 				</f:facet>
-			</p:toolbar>
+					
+				<p:ajax 
+					event="rowDblselect" 
+					listener="#{reciboFormController.onRowSocioDblClckSelect}" 
+					update=":formRecibo"/>
+						
+				<p:column filterBy="#{socio.nome}" style="width: 70%;">
+					<h:outputText value="#{socio.nome}" />
+				</p:column>	
+			</p:dataTable>
 		</h:form>
 		
 		<h:form id="formValorAutorizado" style=" margin-top: 2px;">
@@ -130,10 +145,14 @@ and open the template in the editor.
 						</p:selectOneMenu>
 					</h:panelGrid>
 					<p:commandButton value="Salvar"  style="width: 7%;"
-						actionListener="#{reciboFormController.gerarRecibo()}"></p:commandButton>
+						actionListener="#{reciboFormController.gerarRecibo()}"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"/>
 				</p:tab>
 			</p:tabView>
 		</h:form>
+		<ui:include src="/pages/popUpGlobal/load.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>
 </html>

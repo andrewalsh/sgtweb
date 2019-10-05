@@ -2,6 +2,7 @@ package br.com.sgt.service.impl;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.inject.Inject;
@@ -46,11 +47,17 @@ public class ReciboBoundary implements Serializable, ReciboService{
 
 	@Override
 	public void enviarEmail(Recibo recibo) {
-		try {
-			enviar(recibo);
-		} catch (Exception e) {
-			throw e;
+		if(Objects.nonNull(recibo.getValorAutorizado().getSocio().getPessoa().getEmail())) {
+			try {
+				enviar(recibo);
+			} catch (Exception e) {
+				throw e;
+			}
 		}
+		else {
+			return;
+		}
+		
 	}
 	
 	

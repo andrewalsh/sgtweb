@@ -21,16 +21,18 @@ and open the template in the editor.
 		<h:form id="frmToolbar">
 			<p:toolbar >
 				<f:facet name="left">
-					<p:commandButton value="Novo" icon="fa fa-plus" 
-						actionListener="#{sociosListController.navega()}"/>
+					<p:commandButton 
+						value="Novo" 
+						icon="fa fa-plus" 
+						actionListener="#{sociosListController.novo()}"/>
 						
-					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
-					
-					<p:commandButton  value="Consultar" icon="fa fa-file" 
-						actionListener="#{socioFormController.socio}"/>
-						
-					<p:commandButton  value="Salvar" icon="fa fa-fa-floppy-o" 
-						actionListener="#{socioFormController.salvar()}"/>
+					<p:commandButton  
+						value="Salvar" 
+						icon="fa fa-fa-floppy-o" 
+						actionListener="#{socioFormController.salvar()}"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"/>
 				</f:facet>
 			</p:toolbar>
 		</h:form>
@@ -184,11 +186,14 @@ and open the template in the editor.
     				<p:commandButton value="Salvar" 
     					actionListener="#{socioFormController.salvarValorAutorizado()}"
     					oncomplete="PF('popUpValorAutorizadoEditar').hide();"
+    					onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"
     					update=":formSocio:viewSocio:tblValorAutorizado"></p:commandButton>
     			</h:panelGrid>
 			</p:dialog>
 		</h:form>
-		
+		<ui:include src="/pages/popUpGlobal/load.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>
 </html>

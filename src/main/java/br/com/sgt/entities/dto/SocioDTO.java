@@ -44,25 +44,5 @@ public class SocioDTO implements Serializable{
 	public String getTelefoneResidencial() {
 		return telefoneResidencial;
 	}
-
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("SocioDTO [idSocio=");
-		builder.append(idSocio);
-		builder.append(", nome=");
-		builder.append(nome);
-		builder.append(", tipoSocio=");
-		builder.append(tipoSocio);
-		builder.append(", telefoneCelular=");
-		builder.append(telefoneCelular);
-		builder.append(", telefoneResidencial=");
-		builder.append(telefoneResidencial);
-		builder.append("]");
-		return builder.toString();
-	}
-	
-	
 	
 }

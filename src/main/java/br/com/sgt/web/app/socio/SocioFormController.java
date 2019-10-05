@@ -236,9 +236,15 @@ public class SocioFormController implements Serializable{
 	}
 	
 	private void popularSocio(String id) {
-		if(Objects.nonNull(id)) {
+		Long idSocio = null;
+		try {
+			idSocio = Long.valueOf(id);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(Objects.nonNull(idSocio)) {
 			try {
-				socio = socioService.buscarPorId(Long.valueOf(id));
+				socio = socioService.buscarPorId(idSocio);
 			} catch (RuntimeException e) {
 				FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						"Ocorreu um erro ao carregar os dados do sócio selecionado: "+e.getMessage());
@@ -246,6 +252,11 @@ public class SocioFormController implements Serializable{
 		        facesContext.addMessage(null, facesMessage);
 			}
 		}
+	}
+	
+	public void novo() {
+		this.socio = new Socio();
+		va = valorAutorizadoService.valorAutorizadoBuilder();
 	}
 	
 }
