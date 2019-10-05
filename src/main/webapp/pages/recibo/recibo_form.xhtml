@@ -18,16 +18,8 @@ and open the template in the editor.
 		<h:form id="frmToolbar">
 			<p:toolbar >
 				<f:facet name="left">
-					<p:commandButton value="Novo" icon="fa fa-plus" 
-						actionListener="#{sociosListController.navega()}"/>
-						
-					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
-					
-					<p:commandButton  value="Consultar" icon="fa fa-file" 
-						actionListener="#{socioFormController.socio}"/>
-						
-					<p:commandButton  value="Salvar" icon="fa fa-fa-floppy-o" 
-						actionListener="#{socioFormController.salvar()}"/>
+					<h:outputText value="Nome:" />
+					<p:inputText></p:inputText>
 				</f:facet>
 			</p:toolbar>
 		</h:form>
@@ -47,7 +39,10 @@ and open the template in the editor.
 						paginator="true"
 						rowsPerPageTemplate="5,20,50">
 						
-						<p:ajax event="rowDblselect" listener="#{reciboFormController.onRowDblClckSelect}"/>
+						<p:ajax 
+							event="rowDblselect" 
+							listener="#{reciboFormController.onRowDblClckSelect}" 
+							update=":formRecibo"/>
 						
 						<p:headerRow>
 				            <p:column colspan="3">
@@ -83,7 +78,15 @@ and open the template in the editor.
 						<h:outputText value="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa}" />
 						
 						<p:outputLabel value="Valor Líquido:"/>
-						<h:outputText value="#{reciboFormController.valorAutorizado.valorLiquido}" />
+						<p:outputLabel
+							id="lblValorLiquido"
+							rendered="#{not reciboFormController.valorAutorizado.tarifa.nomeTarifa.equals('POUP')}"
+							value="#{reciboFormController.valorAutorizado.valorLiquido}" />
+						
+						<p:inputText
+							id="txtValorLiquido"
+							rendered="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa.equals('POUP')}"
+							value="#{reciboFormController.valorAutorizado.valorLiquido}" />
 						
 						<p:outputLabel value="Mês:"/>
 						<p:selectOneMenu value="#{reciboFormController.recibo.mesBase}" filter="true">

@@ -55,18 +55,13 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	
 	public void enviar(Recibo recibo) {
-		
 		try {
-			//obterEmailSenha();
-			
 			Properties properties = new Properties();
 			properties.put("mail.smtp.host", "smtp.gmail.com");
 			properties.put("mail.smtp.socketFactory.port", "465");
 			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			properties.put("mail.smtp.auth", "true");
 			properties.put("mail.smtp.port", "465");
-			
-			
 			
 			Session session = Session.getDefaultInstance(properties,
 				      new javax.mail.Authenticator() {
@@ -96,7 +91,4 @@ public class ReciboBoundary implements Serializable, ReciboService{
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
-	
-
 }
