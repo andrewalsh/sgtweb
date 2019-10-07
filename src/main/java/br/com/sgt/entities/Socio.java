@@ -47,7 +47,7 @@ public class Socio implements Serializable{
 	@JoinColumn(name="ID_PESSOA",nullable=false)
 	private Pessoa pessoa;
 	
-	@OneToMany(mappedBy="socio", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="socio", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<ValorAutorizado> valorAutorizado = new ArrayList<ValorAutorizado>();
 	
 

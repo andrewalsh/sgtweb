@@ -2,12 +2,9 @@ package br.com.sgt.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 
 @Table(name="T_RECIBO")
@@ -59,11 +57,20 @@ public class Recibo implements Serializable{
 	@JoinColumn(name="ID_VALOR_AUTORIZADO", nullable=false)
 	private ValorAutorizado valorAutorizado;
 
+	@Transient
+	private Terreiro terreiro;
 	
 	public Recibo() {
-		geradorNumeroRecibo();
 	}
 
+	public Recibo(Recibo recibo) {
+		this.valorAutorizado = recibo.getValorAutorizado();
+		this.idTerreiro = recibo.getIdTerreiro();
+		this.numeroRecibo = recibo.getNumeroRecibo();
+		this.anoBase = recibo.getAnoBase();
+		this.mesBase = recibo.getMesBase();
+		this.dataPagamento = recibo.getDataPagamento();
+	}
 
 	public Long getIdRecibo() {
 		return idRecibo;
@@ -153,6 +160,14 @@ public class Recibo implements Serializable{
 	public void setValorAutorizado(ValorAutorizado valorAutorizado) {
 		this.valorAutorizado = valorAutorizado;
 	}
+	
+	public Terreiro getTerreiro() {
+		return terreiro;
+	}
+	
+	public void setTerreiro(Terreiro terreiro) {
+		this.terreiro = terreiro;
+	}
 
 
 	@Override
@@ -217,12 +232,5 @@ public class Recibo implements Serializable{
 		return Arrays.asList("Dinheiro", "Cartao de Credito", "TED", "Cartao de Debito", "Deposito", "Cheque");
 	}
 	
-	private void geradorNumeroRecibo() {
-		Locale locale = new Locale("pt", "BR");
-		GregorianCalendar calendar = new GregorianCalendar();
-		SimpleDateFormat formatador = new SimpleDateFormat("yyMMddHHmmss", locale);
-		numeroRecibo = formatador.format(calendar.getTime());
-	}
-
 	
 }

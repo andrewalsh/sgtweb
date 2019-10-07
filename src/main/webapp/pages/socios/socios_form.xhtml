@@ -21,16 +21,18 @@ and open the template in the editor.
 		<h:form id="frmToolbar">
 			<p:toolbar >
 				<f:facet name="left">
-					<p:commandButton value="Novo" icon="fa fa-plus" 
-						actionListener="#{sociosListController.navega()}"/>
+					<p:commandButton 
+						value="Novo" 
+						icon="fa fa-plus" 
+						actionListener="#{sociosListController.novo()}"/>
 						
-					<p:commandButton type="button" value="Editar" icon="fa fa-pencil" />
-					
-					<p:commandButton  value="Consultar" icon="fa fa-file" 
-						actionListener="#{socioFormController.socio}"/>
-						
-					<p:commandButton  value="Salvar" icon="fa fa-fa-floppy-o" 
-						actionListener="#{socioFormController.salvar()}"/>
+					<p:commandButton  
+						value="Salvar" 
+						icon="fa fa-fa-floppy-o" 
+						actionListener="#{socioFormController.salvar()}"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"/>
 				</f:facet>
 			</p:toolbar>
 		</h:form>
@@ -104,14 +106,20 @@ and open the template in the editor.
 				
 				<p:tab title="Autorização de Valores">
 					<h:panelGrid columns="2">
-						<p:commandButton value="Adicionar nova tarifa" styleClass="ui-priority-primary" process="@this"
-							oncomplete="PF('popUpValorAutorizado').show();"/>
+						<p:commandButton value="Adicionar nova tarifa" styleClass="ui-priority-primary"
+							actionListener="#{socioFormController.abirPopUpAlteracaoDeValor()}"/>
 					</h:panelGrid>
 					
 					<p:dataTable 
 						id="tblValorAutorizado"
 						value="#{socioFormController.socio.valorAutorizado}" 
-						var="valorAutorizado">
+						var="valorAutorizado"
+						selectionMode="single"
+						selection="#{valorAutorizado}" 
+						rowKey="#{valorAutorizado.idValorAutorizado}">
+						
+						<p:ajax event="rowDblselect" listener="#{socioFormController.onRowDblClckSelect}"/>
+						
 						<p:column headerText="Tarifa | Mensalidade">
 							<h:outputText value="#{valorAutorizado.tarifa.nomeTarifa}" />
 						</p:column>
@@ -120,7 +128,7 @@ and open the template in the editor.
 						</p:column>
 						
 						<p:column headerText="Valor Real">
-							<h:outputText value="#{valorAutorizado.tarifa.valor}" />
+							<h:outputText value="#{valorAutorizado.valorLiquido}" />
 						</p:column>
 						
 					</p:dataTable>
@@ -128,35 +136,64 @@ and open the template in the editor.
 			</p:tabView>
 		</h:form>
 		
-		<h:form id="formPopUp">
-			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizado" modal="true" closable="true" height="150">
-    			<h:panelGrid columns="2">
+		<h:form id="formPopUpNovo">
+			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizadoNovo" modal="true" closable="true" height="150">
+    			<h:panelGrid columns="2" cellpadding="2">
     				<h:outputLabel value="Tarifa" />
     				<p:selectOneMenu value="#{socioFormController.idTarifa}">
-    					<f:selectItem itemLabel="Selecione..." itemValue=""/>
-    					<f:selectItems value="#{socioFormController.tarifas}" var="tarifa"
-    						itemLabel="#{tarifa.nomeTarifa}" itemValue="#{tarifa.idTarifa}"/>
-    					<p:ajax event="itemSelect" update="valorBruto" listener="#{socioFormController.vincularAutorizacaoDeValor()}"/>
-    				</p:selectOneMenu>
+	    				<f:selectItem itemLabel="Selecione..." itemValue=""/>
+	    				<f:selectItems value="#{socioFormController.tarifas}" var="tarifa"
+	    					itemLabel="#{tarifa.nomeTarifa}" itemValue="#{tarifa.idTarifa}"/>
+	    				<p:ajax event="itemSelect" update="valorBruto" listener="#{socioFormController.convertIdTarifa()}"/>
+	    				<p:ajax event="itemSelect" update="valorReal" listener="#{socioFormController.atribuiValorLiquidoValorAutorizado()}"/>
+	    			</p:selectOneMenu>
     				
     				<p:outputLabel value="Valor Bruto"/>
     				<h:outputText id="valorBruto"
-    					value="#{socioFormController.tarifa.valor}" />
+    					value="#{socioFormController.va.tarifa.valor}" />
     					
-    				<p:outputLabel value="Valor Real"/>
+    				<p:outputLabel value="Valor Líquido"/>
     				<p:inputText id="valorReal"
-    					value="#{socioFormController.tarifa.valor}">
+    					value="#{socioFormController.va.valorLiquido}">
     					<p:ajax event="change"/>
     				</p:inputText>
     				
-    				<p:commandButton value="Adicionar" 
-    					process="@this" 
-    					oncomplete="PF('popUpValorAutorizado').hide();"
-    					update=":formSocio:viewSocio:tblValorAutorizado"></p:commandButton>
+    				<p:commandButton value="Salvar" 
+    					actionListener="#{socioFormController.salvarValorAutorizado()}"
+    					oncomplete="PF('popUpValorAutorizadoNovo').hide();"
+    					update=":formSocio"></p:commandButton>
     			</h:panelGrid>
 			</p:dialog>
 		</h:form>
 		
+		
+		<h:form id="formPopUpEditar">
+			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizadoEditar" modal="true" closable="true" height="150">
+    			<h:panelGrid columns="2" cellpadding="2">
+    				<h:outputLabel value="Tarifa" />
+    				<h:outputLabel value="#{socioFormController.va.tarifa.nomeTarifa}" />
+    				
+    				<p:outputLabel value="Valor Bruto"/>
+    				<h:outputText id="valorBrutoEditar"
+    					value="#{socioFormController.va.tarifa.valor}" />
+    					
+    				<p:outputLabel value="Valor Líquido"/>
+    				<p:inputText id="valorRealEditar"
+    					value="#{socioFormController.va.valorLiquido}">
+    					<p:ajax event="change"/>
+    				</p:inputText>
+    				
+    				<p:commandButton value="Salvar" 
+    					actionListener="#{socioFormController.salvarValorAutorizado()}"
+    					oncomplete="PF('popUpValorAutorizadoEditar').hide();"
+    					onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"
+    					update=":formSocio:viewSocio:tblValorAutorizado"></p:commandButton>
+    			</h:panelGrid>
+			</p:dialog>
+		</h:form>
+		<ui:include src="/pages/popUpGlobal/load.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>
 </html>

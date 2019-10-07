@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+
+	<ui:define name="conteudo">
+	
+		<h:form id="frmToolbar">
+			<p:dataTable
+				id="tblSocioDTO"
+				value="#{reciboFormController.sociosDTO}"
+				rows="1"
+				var="socio"
+				selectionMode="single"
+				selection="#{socio}"
+				rowKey="#{socio.idSocio}">
+				<f:facet name="header">
+					<h:outputText value="Pesquisa de Sócios" />
+				</f:facet>
+					
+				<p:ajax 
+					event="rowDblselect" 
+					listener="#{reciboFormController.onRowSocioDblClckSelect}" 
+					update=":formRecibo"/>
+						
+				<p:column filterBy="#{socio.nome}" style="width: 70%;">
+					<h:outputText value="#{socio.nome}" />
+				</p:column>	
+			</p:dataTable>
+		</h:form>
+		
+		<h:form id="formValorAutorizado" style=" margin-top: 2px;">
+			<p:dataTable 
+						id="tblValorAutorizado"
+						value="#{reciboFormController.valoresAutorizados}" 
+						var="valorAutorizado"
+						selectionMode="single"
+						selection="#{valorAutorizado}" 
+						sortBy="#{valorAutorizado.socio.idSocio}"
+						expandableRowGroups="true" 
+						expandedRow="false"
+						rowKey="#{valorAutorizado.idValorAutorizado}"
+						rows="5"
+						paginator="true"
+						rowsPerPageTemplate="5,20,50">
+						
+						<p:ajax 
+							event="rowDblselect" 
+							listener="#{reciboFormController.onRowDblClckSelect}" 
+							update=":formRecibo"/>
+						
+						<p:headerRow>
+				            <p:column colspan="3">
+				                <h:outputText value="#{valorAutorizado.socio.pessoa.nome}" />
+				            </p:column>
+				        </p:headerRow>
+						
+						<p:column headerText="Tarifa | Mensalidade">
+							<h:outputText value="#{valorAutorizado.tarifa.nomeTarifa}" />
+						</p:column>
+						<p:column headerText="Valor Bruto">
+							<h:outputText value="#{valorAutorizado.tarifa.valor}" />
+						</p:column>
+						
+						<p:column headerText="Valor Real">
+							<h:outputText value="#{valorAutorizado.valorLiquido}" />
+						</p:column>
+						
+					</p:dataTable>
+		</h:form>
+		
+		<h:form id="formRecibo">
+			<p:tabView>
+				<p:tab title="Dados do Recibo">
+					<h:panelGrid id="dadosValorAutorizado" columns="4" cellpadding="1" style="width: 70%;">
+						<p:outputLabel value="Nome:"/>
+						<h:outputText value="#{reciboFormController.valorAutorizado.socio.pessoa.nome}" />
+						
+						<p:outputLabel value="CPF:"/>
+						<h:outputText value="#{reciboFormController.valorAutorizado.socio.pessoa.cpf}" />
+						
+						<p:outputLabel value="Tarifa:"/>
+						<h:outputText value="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa}" />
+						
+						<p:outputLabel value="Valor Líquido:"/>
+						<p:outputLabel
+							id="lblValorLiquido"
+							rendered="#{not reciboFormController.valorAutorizado.tarifa.nomeTarifa.equals('POUP')}"
+							value="#{reciboFormController.valorAutorizado.valorLiquido}" />
+						
+						<p:inputText
+							id="txtValorLiquido"
+							rendered="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa.equals('POUP')}"
+							value="#{reciboFormController.valorAutorizado.valorLiquido}" />
+						
+						<p:outputLabel value="Mês:"/>
+						<p:selectOneMenu value="#{reciboFormController.recibo.mesBase}" filter="true">
+							<f:selectItem itemLabel="Janeiro" itemValue="1" />
+							<f:selectItem itemLabel="Fevereiro" itemValue="2" />
+							<f:selectItem itemLabel="Março" itemValue="3" />
+							<f:selectItem itemLabel="Abril" itemValue="4" />
+							<f:selectItem itemLabel="Maio" itemValue="5" />
+							<f:selectItem itemLabel="Junho" itemValue="6" />
+							<f:selectItem itemLabel="Julho" itemValue="7" />
+							<f:selectItem itemLabel="Agosto" itemValue="8" />
+							<f:selectItem itemLabel="Setembro" itemValue="9" />
+							<f:selectItem itemLabel="Outubro" itemValue="10" />
+							<f:selectItem itemLabel="Novembro" itemValue="11" />
+							<f:selectItem itemLabel="Dezembro" itemValue="12" />
+							<p:ajax event="itemSelect" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Ano:"/>
+						<p:inputText value="#{reciboFormController.recibo.anoBase}" size="5" />
+						
+						<h:outputLabel value="Data de Pagamento:" />
+						<p:calendar size="10" value="#{reciboFormController.recibo.dataPagamento}"
+							locale="pt_BR" mask="true"  pattern="dd/MM/yyyy" >
+							<p:ajax event="dateSelect" />
+							<p:ajax event="blur" />
+						</p:calendar>
+						
+						<h:outputText value="Forma de Pagamento:" />
+						<p:selectOneMenu id="formaPagamento"
+							value="#{reciboFormController.recibo.formaPagamento}" filter="true">
+							<f:selectItem itemLabel="Selecione..." itemValue="" />
+							<f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />
+							<f:selectItem itemLabel="Cartão de Crédito"
+								itemValue="Cartao de Credito" />
+							<f:selectItem itemLabel="Débito" itemValue="Cartao de Debito" />
+							<f:selectItem itemLabel="Depósito Bancário" itemValue="Deposito" />
+							<f:selectItem itemLabel="TED" itemValue="TED" />
+							<f:selectItem itemLabel="Cheque" itemValue="Cheque" />
+							<p:ajax event="itemSelect" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<p:commandButton value="Salvar"  style="width: 7%;"
+						actionListener="#{reciboFormController.gerarRecibo()}"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"/>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+		<ui:include src="/pages/popUpGlobal/load.xhtml"></ui:include>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,79 +1,46 @@
 package br.com.sgt.service.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
-import javax.management.RuntimeErrorException;
 
+import br.com.sgt.dao.tx.Transacional;
+import br.com.sgt.entities.Pessoa;
 import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.repository.api.ValorAutorizadoRepository;
+import br.com.sgt.repository.filtro.FiltroValorAutorizado;
 import br.com.sgt.service.api.ValorAutorizadoService;
+import br.com.sgt.service.impl.pattern.GerenciadorDeValorAutorizado;
 
-public class ValorAutorizadoBoundary implements ValorAutorizadoService{
+public class ValorAutorizadoBoundary implements Serializable, ValorAutorizadoService{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Inject
 	private ValorAutorizadoRepository valorAutorizadoRepository;
+	
+	@Inject
+	private GerenciadorDeValorAutorizado gerenciadorDeValorAutorizado;
+	
 
-	@Override
-	public boolean autorizacaoValida(ValorAutorizado va) {
-		boolean valido = false;
-		switch (va.getSocio().getTipoSocio()) {
-		
-		case "COLABORADOR":
-			if(descontoValido(va)) {
-				valido = true;
-			}
-			break;
-			
-		case "EFETIVO":
-			if(descontoValido(va)) {
-				valido = true;
-			}
-			break;
-		}
-		return valido;
-	}
 	
-	
+	@Transacional
 	public ValorAutorizado salvar(ValorAutorizado va) {
 		try {
-			return valorAutorizadoRepository.salavar(va);
+			if(Objects.isNull(va.getIdValorAutorizado())) {
+				return salvarValorAutorizado(va);
+			}else {
+				return atualizarValorAutorizado(va);
+			}
 		} catch (RuntimeException e) {
 			throw e;
 		}
 	}
-	
-	
-	private boolean novoValorAutorizadoNaoFoiCadastrado() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	private boolean possuiMenosDeTresTarifas(ValorAutorizado va) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	private boolean descontoValido(ValorAutorizado va) {
-		boolean toReturn = false;
-		if(Objects.nonNull(va)) {
-			try {
-				if(va.getTarifa().getValor().subtract(va.getDesconto()).compareTo(BigDecimal.ZERO) > 0) {
-					toReturn = true;
-				}
-			} catch (RuntimeException e) {
-				toReturn = false;
-				throw e;
-			}
-		}
-		return toReturn;
-	}
-
 
 	@Override
 	public ValorAutorizado associarValor(Tarifa tarifa, Socio socio) {
@@ -87,4 +54,65 @@ public class ValorAutorizadoBoundary implements ValorAutorizadoService{
 		}
 	}
 
+
+	@Override
+	public List<ValorAutorizado> listarPorSocio(Socio socio) {
+		FiltroValorAutorizado filtro = new FiltroValorAutorizado();
+		filtro.setIdSocio(socio.getIdSocio());
+		try {
+			return valorAutorizadoRepository.buscarPorFiltro(filtro);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	public ValorAutorizado valorAutorizadoBuilder() {
+		ValorAutorizado va = new ValorAutorizado();
+		va.setIdTerreiro(1);
+		va.setSocio(new Socio());
+		va.getSocio().setPessoa(new Pessoa());
+		va.setTarifa(new Tarifa());
+		return va;
+	}
+	
+	private boolean novoValorAutorizadoNaoFoiCadastrado() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	private boolean possuiMenosDeTresTarifas(ValorAutorizado va) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private ValorAutorizado salvarValorAutorizado(ValorAutorizado va) {
+		try {
+			if(new GerenciadorDeValorAutorizado().valorAutorizadoParaSocioPermitido(va, listarPorSocio(va.getSocio()))) {
+				return valorAutorizadoRepository.salavar(va);
+			}
+			else
+				return null;
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+	
+	private ValorAutorizado atualizarValorAutorizado(ValorAutorizado va) {
+		try {
+			return valorAutorizadoRepository.atualizar(va);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+
+	@Override
+	public List<ValorAutorizado> listarPorFiltro(FiltroValorAutorizado filtroValorAutorizado) {
+		try {
+			return valorAutorizadoRepository.buscarPorFiltro(filtroValorAutorizado);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
 }

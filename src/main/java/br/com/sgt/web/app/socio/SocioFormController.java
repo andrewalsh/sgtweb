@@ -15,13 +15,18 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+
 import br.com.sgt.entities.Pessoa;
 import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
+import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.filtro.FiltroTarifa;
 import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TarifaService;
+import br.com.sgt.service.api.ValorAutorizadoService;
 
 @Named("socioFormController")
 @ViewScoped
@@ -35,6 +40,8 @@ public class SocioFormController implements Serializable{
 	
 	private Tarifa tarifa = new Tarifa();
 	
+	private ValorAutorizado va;
+	
 	private List<Tarifa> tarifas = new ArrayList<>();
 	
 	private FiltroTarifa filtroTarifa = new FiltroTarifa();
@@ -45,11 +52,17 @@ public class SocioFormController implements Serializable{
 	
 	private Long idTarifa;
 	
+	private String action;
+	
+	
 	@Inject
 	private SocioService socioService;
 	
 	@Inject
 	private TarifaService tarifaService;
+	
+	@Inject
+	private ValorAutorizadoService valorAutorizadoService;
 	
 	@PostConstruct
 	public void init() {
@@ -61,6 +74,7 @@ public class SocioFormController implements Serializable{
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 		}
+		va = valorAutorizadoService.valorAutorizadoBuilder();
 	}
 	
 	
@@ -80,10 +94,10 @@ public class SocioFormController implements Serializable{
 		}
 	}
 	
-	public void setIdTarifa(Long idTarifa) {
-		this.idTarifa = idTarifa;
+	public void convertIdTarifa() {
 		try {
 			tarifa = tarifaService.buscarPorId(idTarifa);
+			va.setTarifa(tarifa);
 		} catch (RuntimeException e) {
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					"Ocorreu um erro ao carregar a Tarifa selecionada: "+e.getMessage());
@@ -138,14 +152,16 @@ public class SocioFormController implements Serializable{
 		this.valorTarifa = valorTarifa;
 	}
 
-
 	public Tarifa getTarifa() {
 		return tarifa;
 	}
 	public void setTarifa(Tarifa tarifa) {
 		this.tarifa = tarifa;
 	}
-
+	
+	public void setIdTarifa(Long idTarifa) {
+		this.idTarifa = idTarifa;
+	}
 
 	public Long getIdTarifa() {
 		return idTarifa;
@@ -157,24 +173,78 @@ public class SocioFormController implements Serializable{
 	public void setDescontoOuAcrescimo(BigDecimal descontoOuAcrescimo) {
 		this.descontoOuAcrescimo = descontoOuAcrescimo;
 	}
+
+	public ValorAutorizado getVa() {
+		return va;
+	}
+
+	public void setVa(ValorAutorizado va) {
+		this.va = va;
+	}
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
 	
 	
+	
+
 	public void abirPopUpAlteracaoDeValor() {
-		
+		action = "NOVO";
+		RequestContext.getCurrentInstance().update("formPopUpNovo");
+		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoNovo').show()");
 	}
 	
 	public void vincularAutorizacaoDeValor() {
-		socioService.associarValorAutorizadoParaCadastro(tarifa, socio);
+		
 	}
 	
 	public void popularSocio() {
 		
 	}
 	
+	public void onRowDblClckSelect(SelectEvent event) {
+		action = "EDITAR";
+		va = (ValorAutorizado)event.getObject();
+		RequestContext.getCurrentInstance().update("formPopUpEditar");
+		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoEditar').show()");
+	}
+	
+	public void salvarValorAutorizado() {
+		try {
+			va.setSocio(socio);
+			valorAutorizadoService.salvar(va);
+			socio.getValorAutorizado();
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					"Operação realizada com sucesso:");
+	        FacesContext facesContext = FacesContext.getCurrentInstance();
+	        facesContext.addMessage(null, facesMessage);
+		} catch (RuntimeException e) {
+			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
+					"Ocorreu um erro: "+e.getMessage());
+	        FacesContext facesContext = FacesContext.getCurrentInstance();
+	        facesContext.addMessage(null, facesMessage);
+		}
+	}
+	
+	public void atribuiValorLiquidoValorAutorizado() {
+		va.setValorLiquido(tarifa.getValor());
+	}
+	
 	private void popularSocio(String id) {
-		if(Objects.nonNull(id)) {
+		Long idSocio = null;
+		try {
+			idSocio = Long.valueOf(id);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(Objects.nonNull(idSocio)) {
 			try {
-				socio = socioService.buscarPorId(Long.valueOf(id));
+				socio = socioService.buscarPorId(idSocio);
 			} catch (RuntimeException e) {
 				FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						"Ocorreu um erro ao carregar os dados do sócio selecionado: "+e.getMessage());
@@ -182,6 +252,11 @@ public class SocioFormController implements Serializable{
 		        facesContext.addMessage(null, facesMessage);
 			}
 		}
+	}
+	
+	public void novo() {
+		this.socio = new Socio();
+		va = valorAutorizadoService.valorAutorizadoBuilder();
 	}
 	
 }

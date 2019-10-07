@@ -1,13 +1,22 @@
 package br.com.sgt.repository.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import br.com.sgt.dao.DAO;
+import br.com.sgt.entities.Pessoa;
+import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.repository.api.ValorAutorizadoRepository;
 import br.com.sgt.repository.filtro.FiltroValorAutorizado;
@@ -40,13 +49,11 @@ public class ValorAutorizadoDAO implements ValorAutorizadoRepository, Serializab
 	}
 
 	public ValorAutorizado atualizar(ValorAutorizado valorAutorizado) {
-		ValorAutorizado toReturn = new ValorAutorizado();
 		try {
-			toReturn = dao.atualizar(valorAutorizado);
+			return dao.atualizar(valorAutorizado);
 		} catch (RuntimeException e) {
 			throw e;
 		}
-		return toReturn;
 	}
 	
 	public ValorAutorizado buscaPorId(Long id) {
@@ -60,13 +67,44 @@ public class ValorAutorizadoDAO implements ValorAutorizadoRepository, Serializab
 	}
 
 	public List<ValorAutorizado> buscarPorFiltro(FiltroValorAutorizado filtroValorAutorizado) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ValorAutorizado> lista = new ArrayList<>();
+		
+		try {
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<ValorAutorizado> query = em.getCriteriaBuilder().createQuery(ValorAutorizado.class);
+			Root<ValorAutorizado> root = query.from(ValorAutorizado.class);
+			
+			query.where(whereClausule(filtroValorAutorizado, root, cb)
+					.toArray(new Predicate[0]));
+			
+			lista = em.createQuery(query).getResultList();
+			
+		} catch (RuntimeException e) {
+			throw e;
+		}
+		
+		return lista;
 	}
 
 	public void excluir(ValorAutorizado valorAutorizado) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	private List<Predicate> whereClausule(FiltroValorAutorizado filtro, Root<ValorAutorizado> root, CriteriaBuilder cb){
+		List<Predicate> predicates = new ArrayList<>();
+		
+		if(Objects.nonNull(filtro.getIdSocio())) {
+			Path<Long> idSocioPath = root.<Socio>get("socio").<Long>get("idSocio");
+			predicates.add(cb.equal(idSocioPath, filtro.getIdSocio()));
+		}
+		
+		if(Objects.nonNull(filtro.getNomeSocio())) {
+			Path<String> nomeSocioPath = root.<Socio>get("socio").<Pessoa>get("pessoa").<String>get("nome");
+			predicates.add(cb.like(nomeSocioPath, filtro.getNomeSocio()+"%"));
+		}
+		
+		return predicates;
 	}
 
 }

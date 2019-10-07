@@ -41,7 +41,18 @@
 
 		<aside class="menu">
 			<h:panelGroup>
-				
+				<p:panelMenu id="menuPrincipal">
+					<p:submenu label="Sócios">
+						<p:menuitem icon="ui-icon-person" value="Listar"
+							outcome="/pages/socios/socios_list.xhtml"/>
+					</p:submenu>
+					
+					<p:submenu label="Financeiro">
+						<p:submenu label="Receitas">
+							<p:menuitem value="Recibos" outcome="/pages/recibo/recibo_form.xhtml" icon="fa fa-list-alt"/>
+						</p:submenu>
+					</p:submenu>
+				</p:panelMenu>
 			</h:panelGroup>
 			
 		</aside>

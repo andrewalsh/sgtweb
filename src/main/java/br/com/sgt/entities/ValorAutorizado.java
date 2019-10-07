@@ -2,6 +2,7 @@ package br.com.sgt.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,12 +36,10 @@ public class ValorAutorizado implements Serializable{
 	@JoinColumn(name="ID_TARIFA", nullable=false)
 	private Tarifa tarifa;
 
-	@Column(name="DESCONTO", precision=2, scale=2, nullable=true)
-	private BigDecimal desconto;
+	@Column(name="VALOR_LIQUIDO", precision=2, scale=2, nullable=true)
+	private BigDecimal valorLiquido;
 	
-	@Column(name="ACRESCIMO", precision=2, scale=2, nullable=true)
-	private BigDecimal acrescimo;
-	
+
 	public ValorAutorizado() {
 		this.idTerreiro = 1;
 	}
@@ -90,26 +89,16 @@ public class ValorAutorizado implements Serializable{
 	public void setTarifa(Tarifa tarifa) {
 		this.tarifa = tarifa;
 	}
+
+	public BigDecimal getValorLiquido() {
+		return (Objects.isNull(valorLiquido)) ? tarifa.getValor() : valorLiquido;
+	}
+
+	public void setValorLiquido(BigDecimal valorLiquido) {
+		this.valorLiquido = valorLiquido;
+	}
+
 	
-	public BigDecimal getDesconto() {
-		return desconto;
-	}
-
-
-	public void setDesconto(BigDecimal desconto) {
-		this.desconto = desconto;
-	}
-
-
-	public BigDecimal getAcrescimo() {
-		return acrescimo;
-	}
-
-
-	public void setAcrescimo(BigDecimal acrescimo) {
-		this.acrescimo = acrescimo;
-	}
-
 
 	@Override
 	public int hashCode() {
@@ -119,9 +108,9 @@ public class ValorAutorizado implements Serializable{
 		result = prime * result + ((idValorAutorizado == null) ? 0 : idValorAutorizado.hashCode());
 		result = prime * result + ((socio == null) ? 0 : socio.hashCode());
 		result = prime * result + ((tarifa == null) ? 0 : tarifa.hashCode());
+		result = prime * result + ((valorLiquido == null) ? 0 : valorLiquido.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -152,9 +141,13 @@ public class ValorAutorizado implements Serializable{
 				return false;
 		} else if (!tarifa.equals(other.tarifa))
 			return false;
+		if (valorLiquido == null) {
+			if (other.valorLiquido != null)
+				return false;
+		} else if (!valorLiquido.equals(other.valorLiquido))
+			return false;
 		return true;
 	}
-
 
 	@Override
 	public String toString() {
