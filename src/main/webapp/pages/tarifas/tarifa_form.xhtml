@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+
+	<ui:define name="conteudo">
+		<h:form id="formListTarifas" style=" margin-top: 2px;">
+			<p:dataTable 
+						id="tblTarifas"
+						value="#{tarifaFormController.tarifasCadastradas}" 
+						var="tarifa"
+						selectionMode="single"
+						selection="#{tarifa}" 
+						rowKey="#{tarifa.idTarifa}">
+						
+						<p:ajax 
+							event="rowDblselect" 
+							listener="#{tarifaFormController.onRowDblClckSelect}" 
+							update=":formTarifa"/>
+						
+						<p:column headerText="Tarifa">
+							<h:outputText value="#{tarifa.nomeTarifa}" />
+						</p:column>
+						<p:column headerText="Valor">
+							<h:outputText value="#{tarifa.valor}" />
+						</p:column>
+					</p:dataTable>
+		</h:form>
+		
+		<h:form id="formTarifa">
+			<p:tabView>
+				<p:tab title="Dados da Tarifa">
+					<h:panelGrid id="dadosTarifa" columns="2">
+						<p:outputLabel value="Nome:"/>
+						<h:outputText value="#{tarifaFormController.tarifa.nomeTarifa}" />
+						
+						<p:outputLabel value="Valor"/>
+						<p:inputText
+							value="#{tarifaFormController.tarifa.valor}">
+							<p:ajax event="change"/>
+						</p:inputText>
+						
+						<p:commandButton value="Salvar"
+							actionListener="#{tarifaFormController.salvar()}"
+							onstart="PF('statusDialog').show();"
+	    					onsuccess="PF('statusDialog').hide();"
+	    					onerror="PF('statusDialog').hide();"
+	    					update=":formListTarifas"/>
+    				</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+		<ui:include src="/pages/popUpGlobal/load.xhtml"></ui:include>
+	</ui:define>
+</ui:composition>
+</html>
