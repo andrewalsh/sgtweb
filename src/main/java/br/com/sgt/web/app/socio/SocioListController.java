@@ -14,12 +14,9 @@ import javax.inject.Named;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
-import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.dto.SocioDTO;
-import br.com.sgt.infra.api.ListInterface;
 import br.com.sgt.repository.filtro.FiltroSocio;
 import br.com.sgt.service.api.SocioService;
-import br.com.sgt.web.PagesNavigation;
 
 
 @Named("sociosListController")

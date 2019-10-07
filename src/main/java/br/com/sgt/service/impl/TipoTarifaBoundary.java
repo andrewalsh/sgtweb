@@ -2,8 +2,6 @@ package br.com.sgt.service.impl;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import br.com.sgt.entities.TipoTarifa;
 import br.com.sgt.repository.api.TipoTarifaRepository;
 import br.com.sgt.repository.filtro.FiltroTipoTarifa;

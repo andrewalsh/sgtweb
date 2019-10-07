@@ -11,7 +11,6 @@ import javax.persistence.criteria.Root;
 
 import br.com.sgt.dao.DAO;
 import br.com.sgt.entities.Terreiro;
-import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.api.TerreiroRepository;
 
 public class TerreiroDAO implements Serializable, TerreiroRepository{
@@ -19,6 +18,7 @@ public class TerreiroDAO implements Serializable, TerreiroRepository{
 	
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unused")
 	private DAO<Terreiro> dao;
 	
 	@Inject

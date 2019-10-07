@@ -16,6 +16,7 @@ public class UsuarioDAO implements UsuarioRepository {
 	@Inject
 	private EntityManager em;
 	
+	@SuppressWarnings("unused")
 	private DAO<Usuario> dao;
 	
 	public UsuarioDAO() {

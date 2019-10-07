@@ -2,11 +2,9 @@ package br.com.sgt.pattern.builder;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import br.com.sgt.entities.Pessoa;
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
@@ -14,7 +12,6 @@ import br.com.sgt.entities.ValorAutorizado;
 
 public class ReciboBuilder {
 
-	private ValorAutorizado va;
 	private Recibo recibo = new Recibo();
 	
 	public ReciboBuilder(){
@@ -49,10 +46,5 @@ public class ReciboBuilder {
 		GregorianCalendar calendar = new GregorianCalendar();
 		SimpleDateFormat formatador = new SimpleDateFormat("yyMMddHHmmss", locale);
 		return formatador.format(calendar.getTime());
-	}
-	
-	private Date hoje() {
-		Calendar calendar = Calendar.getInstance();
-		return calendar.getTime();
 	}
 }

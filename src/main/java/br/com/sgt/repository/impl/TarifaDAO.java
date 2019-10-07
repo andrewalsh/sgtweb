@@ -7,16 +7,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.sgt.dao.DAO;
-import br.com.sgt.entities.Pessoa;
-import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
-import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.api.TarifaRepository;
 import br.com.sgt.repository.filtro.FiltroTarifa;
 

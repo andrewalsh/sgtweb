@@ -3,8 +3,6 @@ package br.com.sgt.service.api;
 import java.util.List;
 
 import br.com.sgt.entities.Socio;
-import br.com.sgt.entities.Tarifa;
-import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.filtro.FiltroSocio;
 

@@ -17,7 +17,6 @@ import javax.mail.internet.MimeMessage;
 
 import br.com.sgt.dao.tx.Transacional;
 import br.com.sgt.entities.Recibo;
-import br.com.sgt.infra.mail.EmailSender;
 import br.com.sgt.repository.api.ReciboRepository;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.TerreiroService;

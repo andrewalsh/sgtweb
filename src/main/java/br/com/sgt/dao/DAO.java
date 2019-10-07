@@ -47,6 +47,7 @@ public class DAO<T> {
 		return instancia;
 	}
 	
+	@SuppressWarnings("unused")
 	public List<T> buscarPorFiltro() {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<T> query = em.getCriteriaBuilder().createQuery(classe);

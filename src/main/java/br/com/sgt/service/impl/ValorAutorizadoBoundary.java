@@ -1,7 +1,6 @@
 package br.com.sgt.service.impl;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,11 +22,6 @@ public class ValorAutorizadoBoundary implements Serializable, ValorAutorizadoSer
 
 	@Inject
 	private ValorAutorizadoRepository valorAutorizadoRepository;
-	
-	@Inject
-	private GerenciadorDeValorAutorizado gerenciadorDeValorAutorizado;
-	
-
 	
 	@Transacional
 	public ValorAutorizado salvar(ValorAutorizado va) {
@@ -74,17 +68,6 @@ public class ValorAutorizadoBoundary implements Serializable, ValorAutorizadoSer
 		va.getSocio().setPessoa(new Pessoa());
 		va.setTarifa(new Tarifa());
 		return va;
-	}
-	
-	private boolean novoValorAutorizadoNaoFoiCadastrado() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	private boolean possuiMenosDeTresTarifas(ValorAutorizado va) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	private ValorAutorizado salvarValorAutorizado(ValorAutorizado va) {
