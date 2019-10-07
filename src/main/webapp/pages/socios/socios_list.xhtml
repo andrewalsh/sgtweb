@@ -11,8 +11,7 @@ and open the template in the editor.
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-<ui:composition template="/templates/template.xhtml">
-	
+<ui:composition template="/templates/template.xhtml">	
 	<ui:define name="conteudo">
 	
 		<h:form id="frmToolbar">
@@ -28,17 +27,38 @@ and open the template in the editor.
 			</p:toolbar>
 		</h:form>
 		<h:form id="frmSocioPesquisa" style="margin-left:0px; margin-right: 20px; margin-top: 2px;">
-			<p:dataTable value="#{sociosListController.socios}" var="socio"
-				paginator="true" rows="10"
+			<p:dataTable 
+				id="tblSocios"
+				value="#{sociosListController.socios}" 
+				var="socio"
+				paginator="true" 
+				rows="10"
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				rowsPerPageTemplate="10,20,50" selectionMode="single"
-				selection="#{socio}" rowKey="#{socio.idSocio}">
+				rowsPerPageTemplate="10,20,50" 
+				selectionMode="single"
+				selection="#{socio}" 
+				rowKey="#{socio.idSocio}">
 
 				<p:ajax event="rowSelect" listener="#{sociosListController.onRowSelect}" />
 				<p:ajax event="rowUnselect" listener="#{sociosListController.onRowUnselect}" />
 				<p:ajax event="rowDblselect" listener="#{sociosListController.onRowDblClckSelect}"/>
 
 				<f:facet name="header">Sócios cadastrados</f:facet>
+				
+				<f:facet name="header">
+		            <p:outputPanel style="text-align: right;">
+		                <h:outputText value="Digite o nome para pesquisar:" />
+		                <p:inputText 
+		                	value="#{sociosListController.filtro.nome}"
+		                	style="width:350px">
+		                	<p:ajax event="change"/>
+		                </p:inputText>
+		                <p:commandButton 
+		                	actionListener="#{sociosListController.filtrarListaPorNome()}"
+		                	update="tblSocios"
+		                	value="Pesquisar"/>
+		            </p:outputPanel>
+		        </f:facet>
 
 				<p:column>
 					<h:outputText value="#{socio.nome}" />

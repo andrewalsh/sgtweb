@@ -75,6 +75,7 @@ public class SocioFormController implements Serializable{
 	        facesContext.addMessage(null, facesMessage);
 		}
 		va = valorAutorizadoService.valorAutorizadoBuilder();
+		//getParams();
 	}
 	
 	
