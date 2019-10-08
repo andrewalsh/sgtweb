@@ -3,6 +3,7 @@ package br.com.sgt.repository.api;
 import java.util.List;
 
 import br.com.sgt.entities.Usuario;
+import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.repository.filtro.FiltroUsuario;
 
 public interface UsuarioRepository {
@@ -11,7 +12,9 @@ public interface UsuarioRepository {
 	
 	Usuario atualizar(Usuario usuario);
 	
-	List<Usuario> buscarPorFiltro(FiltroUsuario filtroUsuario);
+	List<UsuarioDTO> buscarPorFiltro(FiltroUsuario filtroUsuario);
+	
+	UsuarioDTO login(FiltroUsuario filtroUsuario);
 	
 	void excluir(Usuario usuario);
 }
