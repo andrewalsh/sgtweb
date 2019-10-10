@@ -26,4 +26,13 @@ public class UsuarioBoundary implements UsuarioService, Serializable{
 			throw e;
 		}
 	}
+
+	@Override
+	public UsuarioDTO autenticar(FiltroUsuario filtroUsuario) {
+		try {
+			return usuarioRepository.login(filtroUsuario);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
 }

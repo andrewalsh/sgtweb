@@ -11,7 +11,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.servlet.http.HttpSession;
 
-import br.com.sgt.entities.Usuario;
+import br.com.sgt.entities.dto.UsuarioDTO;
 
 public class AutenticacaoPhaseListener implements PhaseListener{
 
@@ -28,7 +28,7 @@ public class AutenticacaoPhaseListener implements PhaseListener{
 		if(!ehPaginaAutenticacao) {
 			ExternalContext externalContext = facesContext.getExternalContext();
 			HttpSession session = (HttpSession) externalContext.getSession(true);
-			Usuario usuario = (Usuario) session.getAttribute("autenticacaoBean");
+			UsuarioDTO usuario = (UsuarioDTO) session.getAttribute("autenticacaoBean");
 			
 			if(Objects.isNull(usuario)) {
 				try {
@@ -49,8 +49,7 @@ public class AutenticacaoPhaseListener implements PhaseListener{
 
 	@Override
 	public PhaseId getPhaseId() {
-		// TODO Auto-generated method stub
-		return null;
+		return PhaseId.RESTORE_VIEW;
 	}
 
 }

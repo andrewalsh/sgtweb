@@ -72,6 +72,7 @@ public class UsuarioDAO implements UsuarioRepository {
 
 	
 	public UsuarioDTO login(FiltroUsuario filtroUsuario) {
+		UsuarioDTO dto = new UsuarioDTO();
 		try {
 			CriteriaBuilder cb = em.getCriteriaBuilder();
 			CriteriaQuery<UsuarioDTO> query = em.getCriteriaBuilder().createQuery(UsuarioDTO.class);
@@ -85,12 +86,12 @@ public class UsuarioDAO implements UsuarioRepository {
 			
 			query.where(whereClausule(filtroUsuario, root, cb)
 					.toArray(new Predicate[0]));
-			Object obj = em.createQuery(query).getSingleResult();
+			dto =  em.createQuery(query).getSingleResult();
 			
-			return new UsuarioDTO(Long.valueOf(obj.toString()), obj.toString(), obj.toString(), Integer.valueOf(obj.toString()));
 		} catch (RuntimeException e) {
 			throw e;
 		}
+		return dto;
 	}
 
 	

@@ -13,6 +13,15 @@ public class UsuarioDTO {
 		this.cpf = cpf;
 		this.idTerreiro = idTerreiro;
 	}
+	
+	public UsuarioDTO(String nome, String cpf) {
+		this.nome = nome;
+		this.cpf = cpf;
+	}
+	
+	public UsuarioDTO() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getIdUsuario() {
 		return idUsuario;

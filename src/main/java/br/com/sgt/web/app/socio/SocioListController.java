@@ -59,7 +59,7 @@ public class SocioListController implements Serializable{
 		try {
 			//FacesContext.getCurrentInstance().getExternalContext().redirect("/sgt/pages/socios_form.xhtml");
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-			ec.redirect("pages/socios/socios_form.xhtml?dto="+getSocio().getIdSocio());
+			ec.redirect("socios_form.xhtml?dto="+getSocio().getIdSocio());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

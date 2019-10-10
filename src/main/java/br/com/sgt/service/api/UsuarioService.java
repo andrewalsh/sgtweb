@@ -8,4 +8,6 @@ import br.com.sgt.repository.filtro.FiltroUsuario;
 public interface UsuarioService {
 
 	List<UsuarioDTO> usuarioLogado(FiltroUsuario filtroUsuario);
+	
+	UsuarioDTO autenticar(FiltroUsuario filtroUsuario);
 }

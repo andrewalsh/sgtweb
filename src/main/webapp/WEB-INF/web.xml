@@ -5,8 +5,8 @@
 	version="2.5">
 	<display-name>sgt</display-name>
 	<welcome-file-list>
-    <welcome-file>pages/socios/socios_list.xhtml</welcome-file>
-  </welcome-file-list>
+    	<welcome-file>pages/login.xhtml</welcome-file>
+  	</welcome-file-list>
 
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
