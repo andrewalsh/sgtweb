@@ -112,7 +112,7 @@ and open the template in the editor.
 					
 					<p:dataTable 
 						id="tblValorAutorizado"
-						value="#{socioFormController.socio.valorAutorizado}" 
+						value="#{socioFormController.valoresAutorizados}" 
 						var="valorAutorizado"
 						selectionMode="single"
 						selection="#{valorAutorizado}" 
@@ -135,7 +135,28 @@ and open the template in the editor.
 				</p:tab>
 				
 				<p:tab title="Histórico de Recibos">
-				
+					<p:dataTable 
+						id="tblRecibos"
+						value="#{socioFormController.recibosDoSocio}" 
+						var="recibo"
+						selectionMode="single"
+						selection="#{recibo}" 
+						rowKey="#{recibo.idRecibo}">
+						
+						<p:ajax event="rowDblselect" listener="#{socioFormController.onRowDblClckSelect}"/>
+						
+						<p:column headerText="Recibo">
+							<h:outputText value="#{recibo.numeroRecibo}" />
+						</p:column>
+						<p:column headerText="Tarifa">
+							<h:outputText value="#{recibo.valorAutorizado.tarifa.nomeTarifa}" />
+						</p:column>
+						
+						<p:column headerText="Valor Pago">
+							<h:outputText value="#{recibo.valorRecibo}" />
+						</p:column>
+						
+					</p:dataTable>
 				</p:tab>
 				
 				<p:tab title="Histórico de Atualização de Valores">

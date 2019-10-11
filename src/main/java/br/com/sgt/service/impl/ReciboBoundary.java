@@ -2,6 +2,7 @@ package br.com.sgt.service.impl;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -18,7 +19,9 @@ import javax.mail.internet.MimeMessage;
 import br.com.sgt.dao.tx.Transacional;
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.repository.api.ReciboRepository;
+import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.service.api.ReciboService;
+import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TerreiroService;
 
 public class ReciboBoundary implements Serializable, ReciboService{
@@ -56,7 +59,15 @@ public class ReciboBoundary implements Serializable, ReciboService{
 		else {
 			return;
 		}
-		
+	}
+	
+	@Override
+	public List<Recibo> listar(FiltroRecibo filtro) {
+		try {
+			return reciboRepository.buscarPorFiltro(filtro);
+		} catch (RuntimeException e) {
+			throw e;
+		}
 	}
 	
 	

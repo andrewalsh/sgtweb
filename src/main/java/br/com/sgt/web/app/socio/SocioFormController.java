@@ -19,11 +19,14 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import br.com.sgt.entities.Pessoa;
+import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
+import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroTarifa;
+import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TarifaService;
 import br.com.sgt.service.api.ValorAutorizadoService;
@@ -44,6 +47,10 @@ public class SocioFormController implements Serializable{
 	
 	private List<Tarifa> tarifas = new ArrayList<>();
 	
+	private List<ValorAutorizado> valoresAutorizados = new ArrayList<>();
+	
+	private List<Recibo> recibosDoSocio = new ArrayList<>();
+	
 	private FiltroTarifa filtroTarifa = new FiltroTarifa();
 	
 	private BigDecimal valorTarifa = BigDecimal.ZERO;
@@ -54,7 +61,6 @@ public class SocioFormController implements Serializable{
 	
 	private String action;
 	
-	
 	@Inject
 	private SocioService socioService;
 	
@@ -63,6 +69,9 @@ public class SocioFormController implements Serializable{
 	
 	@Inject
 	private ValorAutorizadoService valorAutorizadoService;
+	
+	@Inject
+	private ReciboService reciboService;
 	
 	@PostConstruct
 	public void init() {
@@ -119,81 +128,7 @@ public class SocioFormController implements Serializable{
 		
 	}
 	
-	public Socio getSocio() {
-		if(Objects.isNull(socio)) {
-			socio = new Socio();
-			socio.setPessoa(new Pessoa());
-		}
-		return socio;
-	}
-	public void setSocio(Socio socio) {
-		this.socio = socio;
-	}
 	
-	public SocioDTO getDto() {
-		return dto;
-	}
-	public void setDto(SocioDTO dto) {
-		this.dto = dto;
-	}
-
-
-	public List<Tarifa> getTarifas() {
-		return tarifas;
-	}
-	public void setTarifas(List<Tarifa> tarifas) {
-		this.tarifas = tarifas;
-	}
-
-
-	public BigDecimal getValorTarifa() {
-		return valorTarifa;
-	}
-	public void setValorTarifa(BigDecimal valorTarifa) {
-		this.valorTarifa = valorTarifa;
-	}
-
-	public Tarifa getTarifa() {
-		return tarifa;
-	}
-	public void setTarifa(Tarifa tarifa) {
-		this.tarifa = tarifa;
-	}
-	
-	public void setIdTarifa(Long idTarifa) {
-		this.idTarifa = idTarifa;
-	}
-
-	public Long getIdTarifa() {
-		return idTarifa;
-	}
-	
-	public BigDecimal getDescontoOuAcrescimo() {
-		return descontoOuAcrescimo;
-	}
-	public void setDescontoOuAcrescimo(BigDecimal descontoOuAcrescimo) {
-		this.descontoOuAcrescimo = descontoOuAcrescimo;
-	}
-
-	public ValorAutorizado getVa() {
-		return va;
-	}
-
-	public void setVa(ValorAutorizado va) {
-		this.va = va;
-	}
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
-	}
-
-	
-	
-	
-
 	public void abirPopUpAlteracaoDeValor() {
 		action = "NOVO";
 		RequestContext.getCurrentInstance().update("formPopUpNovo");
@@ -219,22 +154,22 @@ public class SocioFormController implements Serializable{
 		try {
 			va.setSocio(socio);
 			valorAutorizadoService.salvar(va);
-			socio.getValorAutorizado();
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					"Operação realizada com sucesso:");
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			notificacaoSucesso("Operação realizada com sucesso.");
+			listarValoresAutorizadosPorSocio();
 		} catch (RuntimeException e) {
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
-					"Ocorreu um erro: "+e.getMessage());
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			notificarErro(e.getMessage());
 		}
 	}
 	
 	public void atribuiValorLiquidoValorAutorizado() {
 		va.setValorLiquido(tarifa.getValor());
 	}
+	
+	public void novo() {
+		this.socio = new Socio();
+		va = valorAutorizadoService.valorAutorizadoBuilder();
+	}
+	
 	
 	private void popularSocio(String id) {
 		Long idSocio = null;
@@ -246,18 +181,134 @@ public class SocioFormController implements Serializable{
 		if(Objects.nonNull(idSocio)) {
 			try {
 				socio = socioService.buscarPorId(idSocio);
+				listarValoresAutorizadosPorSocio();
+				listarRecibosPorSocio();
 			} catch (RuntimeException e) {
-				FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						"Ocorreu um erro ao carregar os dados do sócio selecionado: "+e.getMessage());
-		        FacesContext facesContext = FacesContext.getCurrentInstance();
-		        facesContext.addMessage(null, facesMessage);
+				notificarErro(e.getMessage());
 			}
 		}
 	}
 	
-	public void novo() {
-		this.socio = new Socio();
-		va = valorAutorizadoService.valorAutorizadoBuilder();
+	
+	private void listarValoresAutorizadosPorSocio() {
+		try {
+			valoresAutorizados = valorAutorizadoService.listarPorSocio(socio);
+		} catch (RuntimeException e) {
+			notificarErro(e.getMessage());
+		}
 	}
 	
+	private void listarRecibosPorSocio() {
+		FiltroRecibo filtroRecibo = new FiltroRecibo();
+		try {
+			filtroRecibo.setIdSocio(socio.getIdSocio());
+			recibosDoSocio = reciboService.listar(filtroRecibo);
+		} catch (RuntimeException e) {
+			notificarErro(e.getMessage());
+		}
+	}
+	
+	private void notificarErro(String erro) {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+				"Ocorreu um erro : "+erro);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage(null, facesMessage);
+	}
+	
+	private void notificacaoSucesso(String sucesso) {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sucesso);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage(null, facesMessage);
+	}
+	
+	/*
+	 * GETTERS AND SETTERS 
+	 * */
+	
+	public Socio getSocio() {
+		if(Objects.isNull(socio)) {
+			socio = new Socio();
+			socio.setPessoa(new Pessoa());
+		}
+		return socio;
+	}
+	
+	public void setSocio(Socio socio) {
+		this.socio = socio;
+	}
+	
+	public SocioDTO getDto() {
+		return dto;
+	}
+	
+	public void setDto(SocioDTO dto) {
+		this.dto = dto;
+	}
+
+	public List<Tarifa> getTarifas() {
+		return tarifas;
+	}
+	
+	public void setTarifas(List<Tarifa> tarifas) {
+		this.tarifas = tarifas;
+	}
+	
+	public List<ValorAutorizado> getValoresAutorizados() {
+		return valoresAutorizados;
+	}
+	
+	public void setValoresAutorizados(List<ValorAutorizado> valoresAutorizados) {
+		this.valoresAutorizados = valoresAutorizados;
+	}
+	
+	public List<Recibo> getRecibosDoSocio() {
+		return recibosDoSocio;
+	}
+	
+	public BigDecimal getValorTarifa() {
+		return valorTarifa;
+	}
+	
+	public void setValorTarifa(BigDecimal valorTarifa) {
+		this.valorTarifa = valorTarifa;
+	}
+
+	public Tarifa getTarifa() {
+		return tarifa;
+	}
+	public void setTarifa(Tarifa tarifa) {
+		this.tarifa = tarifa;
+	}
+	
+	public void setIdTarifa(Long idTarifa) {
+		this.idTarifa = idTarifa;
+	}
+
+	public Long getIdTarifa() {
+		return idTarifa;
+	}
+	
+	public BigDecimal getDescontoOuAcrescimo() {
+		return descontoOuAcrescimo;
+	}
+	
+	public void setDescontoOuAcrescimo(BigDecimal descontoOuAcrescimo) {
+		this.descontoOuAcrescimo = descontoOuAcrescimo;
+	}
+
+	public ValorAutorizado getVa() {
+		return va;
+	}
+
+	public void setVa(ValorAutorizado va) {
+		this.va = va;
+	}
+	
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
 }

@@ -47,10 +47,6 @@ public class Socio implements Serializable{
 	@JoinColumn(name="ID_PESSOA",nullable=false)
 	private Pessoa pessoa;
 	
-	@OneToMany(mappedBy="socio", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	private List<ValorAutorizado> valorAutorizado = new ArrayList<ValorAutorizado>();
-	
-
 	public Socio() {
 		if(Objects.isNull(pessoa)) {
 			setPessoa(new Pessoa());
@@ -106,17 +102,6 @@ public class Socio implements Serializable{
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
-
-
-	public List<ValorAutorizado> getValorAutorizado() {
-		return valorAutorizado;
-	}
-
-
-	public void setValorAutorizado(List<ValorAutorizado> valorAutorizado) {
-		this.valorAutorizado = valorAutorizado;
-	}
-
 
 	@Override
 	public int hashCode() {
