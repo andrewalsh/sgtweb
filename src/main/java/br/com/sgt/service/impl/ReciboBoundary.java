@@ -41,12 +41,15 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	@Override
 	@Transacional
-	public Recibo salvar(Recibo recibo) {
+	public Recibo salvar(Recibo recibo, UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa) {
 		try {
 			recibo.setTerreiro(terreiroService.buscarTerreiro());
 			recibo.setValorRecibo(recibo.getValorAutorizado().getValorLiquido());
-			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(recibo.getValorAutorizado().getIdValorAutorizado(), 
-					recibo.getMesBase(), recibo.getAnoBase()));
+			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
+					ultimoPagamentoDaTarifa.getIdUltimoPagamento(),
+					recibo.getValorAutorizado().getIdValorAutorizado(), 
+					recibo.getMesBase(), 
+					recibo.getAnoBase()));
 			return reciboRepository.salavar(recibo);
 		} catch (RuntimeException e) {
 			throw e;

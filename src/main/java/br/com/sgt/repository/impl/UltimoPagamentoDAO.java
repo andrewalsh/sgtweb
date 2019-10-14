@@ -8,6 +8,7 @@ import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -16,7 +17,6 @@ import javax.persistence.criteria.Root;
 
 import br.com.sgt.dao.DAO;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
-import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.repository.api.UltimoPagamentoRepository;
 import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 
@@ -60,6 +60,7 @@ public class UltimoPagamentoDAO implements UltimoPagamentoRepository, Serializab
 	
 	@Override
 	public UltimoPagamentoDaTarifa buscarPorFiltro(FiltroUltimoPagamento filtroUltimoPagamento) {
+		UltimoPagamentoDaTarifa ultimoPagamento = new UltimoPagamentoDaTarifa();
 		try {
 			CriteriaBuilder cb = em.getCriteriaBuilder();
 			CriteriaQuery<UltimoPagamentoDaTarifa> query = em.getCriteriaBuilder().createQuery(UltimoPagamentoDaTarifa.class);
@@ -68,10 +69,16 @@ public class UltimoPagamentoDAO implements UltimoPagamentoRepository, Serializab
 			query.where(whereClausule(filtroUltimoPagamento, root, cb)
 					.toArray(new Predicate[0]));
 			
-			return em.createQuery(query).getSingleResult();
+			ultimoPagamento = em.createQuery(query).getSingleResult();
+			
 		} catch (RuntimeException e) {
-			throw e;
+			if(e instanceof NoResultException ){
+				return ultimoPagamento;
+			}
+			else
+				throw e;
 		}
+		return ultimoPagamento;
 	}
 	
 	private List<Predicate> whereClausule(FiltroUltimoPagamento filtro, Root<UltimoPagamentoDaTarifa> root, CriteriaBuilder cb){

@@ -33,7 +33,8 @@ public class UltimoPagamentoDaTarifa implements Serializable{
 		
 	}
 	
-	public UltimoPagamentoDaTarifa(Long idValorAutorizado, int mesBase, int anoBase) {
+	public UltimoPagamentoDaTarifa(Long idUltimoPagamento, Long idValorAutorizado, int mesBase, int anoBase) {
+		this.idUltimoPagamento = idUltimoPagamento;
 		this.idValorAutorizado = idValorAutorizado;
 		this.mesBase = mesBase;
 		this.anoBase = anoBase;

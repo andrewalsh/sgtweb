@@ -39,6 +39,8 @@ public class ReciboFormController implements Serializable{
 	
 	private ValorAutorizado valorAutorizado;
 	
+	private UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa = new UltimoPagamentoDaTarifa();
+	
 	private Long idSocio;
 	
 	private String nomeSocio;
@@ -54,8 +56,6 @@ public class ReciboFormController implements Serializable{
 	
 	@Inject
 	private UltimoPagamentoService ultimoPagamentoService;
-	
-	UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa = new UltimoPagamentoDaTarifa();
 	
 	private FiltroValorAutorizado filtroValorAutorizado = new FiltroValorAutorizado();
 	
@@ -101,7 +101,7 @@ public class ReciboFormController implements Serializable{
 	public void gerarRecibo() {
 		try {
 			Recibo toReturn = new ReciboBuilder().gerar();
-			toReturn = reciboService.salvar(recibo);
+			toReturn = reciboService.salvar(recibo, ultimoPagamentoDaTarifa);
 			reciboService.enviarEmail(toReturn);
 			notificarSucesso("Operação realizada com sucesso!");
 	        
@@ -222,5 +222,13 @@ public class ReciboFormController implements Serializable{
 
 	public void setFiltroValorAutorizado(FiltroValorAutorizado filtroValorAutorizado) {
 		this.filtroValorAutorizado = filtroValorAutorizado;
+	}
+
+	public UltimoPagamentoDaTarifa getUltimoPagamentoDaTarifa() {
+		return ultimoPagamentoDaTarifa;
+	}
+
+	public void setUltimoPagamentoDaTarifa(UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa) {
+		this.ultimoPagamentoDaTarifa = ultimoPagamentoDaTarifa;
 	}
 }

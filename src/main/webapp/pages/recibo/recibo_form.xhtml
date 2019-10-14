@@ -14,30 +14,6 @@ and open the template in the editor.
 <ui:composition template="/templates/template.xhtml">
 
 	<ui:define name="conteudo">
-	
-		<h:form id="frmToolbar">
-			<p:dataTable
-				id="tblSocioDTO"
-				value="#{reciboFormController.sociosDTO}"
-				rows="1"
-				var="socio"
-				selectionMode="single"
-				selection="#{socio}"
-				rowKey="#{socio.idSocio}">
-				<f:facet name="header">
-					<h:outputText value="Pesquisa de Sócios" />
-				</f:facet>
-					
-				<p:ajax 
-					event="rowDblselect" 
-					listener="#{reciboFormController.onRowSocioDblClckSelect}" 
-					update=":formRecibo"/>
-						
-				<p:column filterBy="#{socio.nome}" style="width: 70%;">
-					<h:outputText value="#{socio.nome}" />
-				</p:column>	
-			</p:dataTable>
-		</h:form>
 		
 		<h:form id="formValorAutorizado" style=" margin-top: 2px;">
 			<p:dataTable 
@@ -54,10 +30,25 @@ and open the template in the editor.
 						paginator="true"
 						rowsPerPageTemplate="5,20,50">
 						
+						<f:facet name="header">
+				            <p:outputPanel style="text-align: right;">
+				                <h:outputText value="Digite o nome para pesquisar:" />
+				                <p:inputText 
+				                	value="#{reciboFormController.filtroValorAutorizado.nomeSocio}"
+				                	style="width:350px">
+				                	<p:ajax event="change"/>
+				                </p:inputText>
+				                <p:commandButton 
+				                	actionListener="#{reciboFormController.listarValoresAutorizadosPorSocio()}"
+				                	update="formValorAutorizado"
+				                	value="Pesquisar"/>
+				            </p:outputPanel>
+				        </f:facet>
+						
 						<p:ajax 
 							event="rowDblselect" 
 							listener="#{reciboFormController.onRowDblClckSelect}" 
-							update=":formRecibo"/>
+							update=":formRecibo :formUltimoPagamento"/>
 						
 						<p:headerRow>
 				            <p:column colspan="3">
@@ -77,6 +68,23 @@ and open the template in the editor.
 						</p:column>
 						
 					</p:dataTable>
+		</h:form>
+		
+		<h:form id="formUltimoPagamento">
+			<p:tabView>
+				<p:tab title="Último pagamento da tarifa selecionada">
+					<h:panelGrid id="dadosUltimoPagamento" columns="6" cellpadding="1" style="width: 50%;">
+						<p:outputLabel value="Tarifa:"/>
+						<h:outputText value="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa}" />
+						
+						<p:outputLabel value="Mês:"/>
+						<h:outputText value="#{reciboFormController.ultimoPagamentoDaTarifa.mesBase}" />
+						
+						<p:outputLabel value="Ano:"/>
+						<h:outputText value="#{reciboFormController.ultimoPagamentoDaTarifa.anoBase}" />
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
 		</h:form>
 		
 		<h:form id="formRecibo">
@@ -143,6 +151,13 @@ and open the template in the editor.
 							<f:selectItem itemLabel="Cheque" itemValue="Cheque" />
 							<p:ajax event="itemSelect" />
 						</p:selectOneMenu>
+						
+						<h:outputText value="Meses à pagar:" />
+						<p:spinner
+							id="mesesPagar"
+							min="#{12 - reciboFormController.ultimoPagamentoDaTarifa.mesBase}"
+							max="12"
+							/>
 					</h:panelGrid>
 					<p:commandButton value="Salvar"  style="width: 7%;"
 						actionListener="#{reciboFormController.gerarRecibo()}"
