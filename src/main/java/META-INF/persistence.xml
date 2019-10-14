@@ -15,6 +15,7 @@
 		<class>br.com.sgt.entities.Usuario</class>
 		<class>br.com.sgt.entities.ValorAutorizado</class>
 		<class>br.com.sgt.entities.Terreiro</class>
+		<class>br.com.sgt.entities.UltimoPagamentoDaTarifa</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

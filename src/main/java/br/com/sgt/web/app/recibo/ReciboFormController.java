@@ -15,14 +15,17 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import br.com.sgt.entities.Recibo;
+import br.com.sgt.entities.UltimoPagamentoDaTarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.pattern.builder.ReciboBuilder;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
 import br.com.sgt.repository.filtro.FiltroSocio;
+import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 import br.com.sgt.repository.filtro.FiltroValorAutorizado;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
+import br.com.sgt.service.api.UltimoPagamentoService;
 import br.com.sgt.service.api.ValorAutorizadoService;
 
 @Named("reciboFormController")
@@ -48,6 +51,11 @@ public class ReciboFormController implements Serializable{
 	
 	@Inject
 	private SocioService socioService;
+	
+	@Inject
+	private UltimoPagamentoService ultimoPagamentoService;
+	
+	UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa = new UltimoPagamentoDaTarifa();
 	
 	private FiltroValorAutorizado filtroValorAutorizado = new FiltroValorAutorizado();
 	
@@ -75,8 +83,8 @@ public class ReciboFormController implements Serializable{
 	public void onRowDblClckSelect(SelectEvent event) {
 		valorAutorizado = (ValorAutorizado)event.getObject();
 		recibo.setValorAutorizado(valorAutorizado);
+		ultimoPagamento(valorAutorizado);
 		RequestContext.getCurrentInstance().update("formRecibo");
-		//RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoEditar').show()");
 	}
 	
 	public void onRowSocioDblClckSelect(SelectEvent event) {
@@ -88,9 +96,6 @@ public class ReciboFormController implements Serializable{
 		} catch (RuntimeException e) {
 			throw e;
 		}
-		//recibo.setValorAutorizado(valorAutorizado);
-		//RequestContext.getCurrentInstance().update("formRecibo");
-		//RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoEditar').show()");
 	}
 
 	public void gerarRecibo() {
@@ -98,21 +103,16 @@ public class ReciboFormController implements Serializable{
 			Recibo toReturn = new ReciboBuilder().gerar();
 			toReturn = reciboService.salvar(recibo);
 			reciboService.enviarEmail(toReturn);
-			
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO,null, "Operação realizada com sucesso!");
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			notificarSucesso("Operação realizada com sucesso!");
 	        
 	        init();
 	        
 	        RequestContext.getCurrentInstance().update("frmToolbar");
 	        RequestContext.getCurrentInstance().update("formValorAutorizado");
 	        RequestContext.getCurrentInstance().update("formRecibo");
+	        
 		} catch (RuntimeException e) {
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"Ocorreu um erro : "+e.getMessage());
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			notificarErro(e.getMessage());
 		}
 	}
 
@@ -125,16 +125,27 @@ public class ReciboFormController implements Serializable{
 			sociosFiltrados = socioService.buscarPorFiltro(filtro);
 			sociosDTO = sociosFiltrados;
 		} else if(query.equals("")){
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"Digite pelo menos 3 caracteres para pesquisar");
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			notificarErro("Digite pelo menos 3 caracteres para pesquisar");
 		}else {
 			sociosFiltrados = null;
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"Não existem Sócios com este nome! Verifique o nome digitado.");
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			notificarErro("Não existem Sócios com este nome! Verifique o nome digitado.");
+		}
+	}
+	
+	public void listarValoresAutorizadosPorSocio() {
+		try {
+			valoresAutorizados = valorAutorizadoService.listarPorFiltro(filtroValorAutorizado);
+		} catch (Exception e) {
+			notificarErro(e.getMessage());
+		}
+	}
+	
+	private void ultimoPagamento(ValorAutorizado valorAutorizado) {
+		try {
+			ultimoPagamentoDaTarifa = ultimoPagamentoService.
+					buscarPorFiltro(new FiltroUltimoPagamento(valorAutorizado.getIdValorAutorizado()));
+		} catch (RuntimeException e) {
+			notificarErro(e.getMessage());
 		}
 	}
 	
@@ -143,11 +154,22 @@ public class ReciboFormController implements Serializable{
 		try {
 			sociosDTO = socioService.buscarPorFiltro(filtro);
 		} catch (RuntimeException e) {
-			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-					"Ocorreu um erro ao carregar a lista de Sócios. "+e.getMessage());
-	        FacesContext facesContext = FacesContext.getCurrentInstance();
-	        facesContext.addMessage(null, facesMessage);
+			
 		}
+	}
+	
+	
+	private void notificarSucesso(String sucesso) {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO,null, sucesso);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage(null, facesMessage);
+	}
+	
+	private void notificarErro(String erro) {
+		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+				"Ocorreu um erro. "+erro);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage(null, facesMessage);
 	}
 	
 	public List<ValorAutorizado> getValoresAutorizados() {
@@ -192,5 +214,13 @@ public class ReciboFormController implements Serializable{
 
 	public void setNomeSocio(String nomeSocio) {
 		this.nomeSocio = nomeSocio;
+	}
+
+	public FiltroValorAutorizado getFiltroValorAutorizado() {
+		return filtroValorAutorizado;
+	}
+
+	public void setFiltroValorAutorizado(FiltroValorAutorizado filtroValorAutorizado) {
+		this.filtroValorAutorizado = filtroValorAutorizado;
 	}
 }

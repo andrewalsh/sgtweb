@@ -3,6 +3,7 @@ package br.com.sgt.web.app.socio;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -202,6 +203,7 @@ public class SocioFormController implements Serializable{
 		FiltroRecibo filtroRecibo = new FiltroRecibo();
 		try {
 			filtroRecibo.setIdSocio(socio.getIdSocio());
+			filtroRecibo.setAnoBase(anoCorrente());
 			recibosDoSocio = reciboService.listar(filtroRecibo);
 		} catch (RuntimeException e) {
 			notificarErro(e.getMessage());
@@ -219,6 +221,12 @@ public class SocioFormController implements Serializable{
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sucesso);
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.addMessage(null, facesMessage);
+	}
+	
+	private int anoCorrente() {
+		Calendar calendar = Calendar.getInstance();
+		int ano = calendar.get(Calendar.YEAR);
+		return ano;
 	}
 	
 	/*

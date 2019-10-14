@@ -18,11 +18,12 @@ import javax.mail.internet.MimeMessage;
 
 import br.com.sgt.dao.tx.Transacional;
 import br.com.sgt.entities.Recibo;
+import br.com.sgt.entities.UltimoPagamentoDaTarifa;
 import br.com.sgt.repository.api.ReciboRepository;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.service.api.ReciboService;
-import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TerreiroService;
+import br.com.sgt.service.api.UltimoPagamentoService;
 
 public class ReciboBoundary implements Serializable, ReciboService{
 
@@ -30,6 +31,9 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	@Inject
 	private ReciboRepository reciboRepository;
+	
+	@Inject
+	private UltimoPagamentoService ultimoPagamentoService;
 
 	@Inject
 	private TerreiroService terreiroService;
@@ -41,6 +45,8 @@ public class ReciboBoundary implements Serializable, ReciboService{
 		try {
 			recibo.setTerreiro(terreiroService.buscarTerreiro());
 			recibo.setValorRecibo(recibo.getValorAutorizado().getValorLiquido());
+			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(recibo.getValorAutorizado().getIdValorAutorizado(), 
+					recibo.getMesBase(), recibo.getAnoBase()));
 			return reciboRepository.salavar(recibo);
 		} catch (RuntimeException e) {
 			throw e;

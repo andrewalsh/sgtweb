@@ -33,7 +33,6 @@ public class AutenticacaoPhaseListener implements PhaseListener{
 			if(Objects.isNull(usuario)) {
 				try {
 					externalContext.redirect(externalContext.getRequestContextPath() + "/pages/login.xhtml");
-					throw new RuntimeException("Usuário ou senha inválidos");
 				} catch (IOException e) {
 					throw new RuntimeException(e.getMessage());
 				}

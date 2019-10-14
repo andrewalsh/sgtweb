@@ -8,7 +8,8 @@ public class FiltroRecibo implements Serializable{
 	
 	private Long idSocio;
 	private String numeroRecibo;
-	
+	private Integer anoBase;
+	private Integer mesBase;
 	
 	public Long getIdSocio() {
 		return idSocio;
@@ -22,7 +23,16 @@ public class FiltroRecibo implements Serializable{
 	public void setNumeroRecibo(String numeroRecibo) {
 		this.numeroRecibo = numeroRecibo;
 	}
-	
-	
-
+	public Integer getAnoBase() {
+		return anoBase;
+	}
+	public void setAnoBase(Integer anoBase) {
+		this.anoBase = anoBase;
+	}
+	public Integer getMesBase() {
+		return mesBase;
+	}
+	public void setMesBase(Integer mesBase) {
+		this.mesBase = mesBase;
+	}
 }

@@ -15,11 +15,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.sgt.dao.DAO;
-import br.com.sgt.entities.Pessoa;
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.ValorAutorizado;
-import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.repository.api.ReciboRepository;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 
@@ -89,6 +87,16 @@ public class ReciboDAO implements ReciboRepository, Serializable {
 		if(Objects.nonNull(filtro.getNumeroRecibo()) && !filtro.getNumeroRecibo().isEmpty()) {
 			Path<String> numeroReciboPath = root.<String>get("numeroRecibo");
 			predicates.add(cb.equal(numeroReciboPath, filtro.getNumeroRecibo()));
+		}
+		
+		if(Objects.nonNull(filtro.getAnoBase())) {
+			Path<Integer> anoBasePath = root.<Integer>get("anoBase");
+			predicates.add(cb.equal(anoBasePath, filtro.getAnoBase()));
+		}
+		
+		if(Objects.nonNull(filtro.getMesBase())) {
+			Path<Integer> mesBasePath = root.<Integer>get("mesBase");
+			predicates.add(cb.equal(mesBasePath, filtro.getMesBase()));
 		}
 		
 		return predicates;
