@@ -19,6 +19,13 @@ public class UsuarioDTO {
 		this.cpf = cpf;
 	}
 	
+	public UsuarioDTO(UsuarioDTO dto) {
+		this.idUsuario = dto.getIdUsuario();
+		this.nome = dto.getNome();
+		this.cpf = dto.getCpf();
+		this.idTerreiro = dto.getIdTerreiro();
+	}
+	
 	public UsuarioDTO() {
 		// TODO Auto-generated constructor stub
 	}

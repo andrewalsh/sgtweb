@@ -33,7 +33,7 @@
 
 			<p:outputLabel value="SGT - Sistema de Gerenciamento de Terreiros"
 				styleClass="texto-cabecalho" />
-			<p:outputLabel value=" - Usuário:"
+			<p:outputLabel value=" - Usuário: #{usuarioFormController.usuarioDTO.nome}"
 				styleClass="texto-cabecalho"
 				/>
 
@@ -58,7 +58,7 @@
 		</aside>
 
 		<section class="principal">
-			
+			<f:event listener="#{usuarioFormController.exibeLogado}" type="preRenderView" />
 			<p:messages id="msg" showDetail="true" autoUpdate="true"
 				closable="true" />
 			<ui:insert name="conteudo" />

@@ -25,6 +25,7 @@ import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
+import br.com.sgt.helper.MessageHelper;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroTarifa;
 import br.com.sgt.service.api.ReciboService;
@@ -73,6 +74,9 @@ public class SocioFormController implements Serializable{
 	
 	@Inject
 	private ReciboService reciboService;
+	
+	@Inject
+	private MessageHelper helper;
 	
 	@PostConstruct
 	public void init() {
@@ -155,10 +159,10 @@ public class SocioFormController implements Serializable{
 		try {
 			va.setSocio(socio);
 			valorAutorizadoService.salvar(va);
-			notificacaoSucesso("Operação realizada com sucesso.");
+			helper.notificacaoSucesso("Operação realizada com sucesso.");
 			listarValoresAutorizadosPorSocio();
 		} catch (RuntimeException e) {
-			notificarErro(e.getMessage());
+			helper.notificarErro(e.getMessage());
 		}
 	}
 	
@@ -185,7 +189,7 @@ public class SocioFormController implements Serializable{
 				listarValoresAutorizadosPorSocio();
 				listarRecibosPorSocio();
 			} catch (RuntimeException e) {
-				notificarErro(e.getMessage());
+				helper.notificarErro(e.getMessage());
 			}
 		}
 	}
@@ -195,7 +199,7 @@ public class SocioFormController implements Serializable{
 		try {
 			valoresAutorizados = valorAutorizadoService.listarPorSocio(socio);
 		} catch (RuntimeException e) {
-			notificarErro(e.getMessage());
+			helper.notificarErro(e.getMessage());
 		}
 	}
 	
@@ -206,11 +210,11 @@ public class SocioFormController implements Serializable{
 			filtroRecibo.setAnoBase(anoCorrente());
 			recibosDoSocio = reciboService.listar(filtroRecibo);
 		} catch (RuntimeException e) {
-			notificarErro(e.getMessage());
+			helper.notificarErro(e.getMessage());
 		}
 	}
 	
-	private void notificarErro(String erro) {
+	/*private void notificarErro(String erro) {
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				"Ocorreu um erro : "+erro);
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -221,7 +225,7 @@ public class SocioFormController implements Serializable{
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sucesso);
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.addMessage(null, facesMessage);
-	}
+	}*/
 	
 	private int anoCorrente() {
 		Calendar calendar = Calendar.getInstance();

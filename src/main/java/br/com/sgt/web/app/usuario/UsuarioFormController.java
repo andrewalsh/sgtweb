@@ -1,4 +1,4 @@
-package br.com.sgt.web.app;
+package br.com.sgt.web.app.usuario;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -60,6 +60,14 @@ public class UsuarioFormController implements Serializable{
 			throw new RuntimeException(e.getMessage());
 			
 		}
+	}
+	
+	public void exibeLogado() {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = facesContext.getExternalContext();
+		HttpSession session = (HttpSession) externalContext.getSession(true);
+		UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("autenticacaoBean");
+		this.usuarioDTO = usuarioDTO;
 	}
 	
 	private void mensagemErro(String msg) {

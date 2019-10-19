@@ -27,8 +27,7 @@ and open the template in the editor.
 						expandedRow="false"
 						rowKey="#{valorAutorizado.idValorAutorizado}"
 						rows="5"
-						paginator="true"
-						rowsPerPageTemplate="5,20,50">
+						paginator="false">
 						
 						<f:facet name="header">
 				            <p:outputPanel style="text-align: right;">
@@ -74,14 +73,26 @@ and open the template in the editor.
 			<p:tabView>
 				<p:tab title="Último pagamento da tarifa selecionada">
 					<h:panelGrid id="dadosUltimoPagamento" columns="6" cellpadding="1" style="width: 50%;">
-						<p:outputLabel value="Tarifa:"/>
-						<h:outputText value="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa}" />
+						<p:outputLabel 
+							style="font-weight: bold;"
+							value="Tarifa:"/>
+						<h:outputText 
+							style="font-weight: bold;"
+							value="#{reciboFormController.valorAutorizado.tarifa.nomeTarifa}" />
 						
-						<p:outputLabel value="Mês:"/>
-						<h:outputText value="#{reciboFormController.ultimoPagamentoDaTarifa.mesBase}" />
+						<p:outputLabel 
+							style="font-weight: bold;"
+							value="Mês:"/>
+						<h:outputText 
+							style="font-weight: bold;"
+							value="#{reciboFormController.ultimoPagamentoDaTarifa.mesBase}" />
 						
-						<p:outputLabel value="Ano:"/>
-						<h:outputText value="#{reciboFormController.ultimoPagamentoDaTarifa.anoBase}" />
+						<p:outputLabel 
+							style="font-weight: bold;"     
+							value="Ano:"/>
+						<h:outputText 
+							style="font-weight: bold;"
+							value="#{reciboFormController.ultimoPagamentoDaTarifa.anoBase}" />
 					</h:panelGrid>
 				</p:tab>
 			</p:tabView>

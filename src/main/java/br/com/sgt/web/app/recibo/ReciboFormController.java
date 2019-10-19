@@ -6,18 +6,22 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
+import br.com.sgt.entities.Usuario;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
+import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.pattern.builder.ReciboBuilder;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
 import br.com.sgt.repository.filtro.FiltroSocio;
@@ -26,6 +30,7 @@ import br.com.sgt.repository.filtro.FiltroValorAutorizado;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.UltimoPagamentoService;
+import br.com.sgt.service.api.UsuarioService;
 import br.com.sgt.service.api.ValorAutorizadoService;
 
 @Named("reciboFormController")
@@ -56,6 +61,9 @@ public class ReciboFormController implements Serializable{
 	
 	@Inject
 	private UltimoPagamentoService ultimoPagamentoService;
+	
+	@Inject
+	UsuarioService usuarioService;
 	
 	private FiltroValorAutorizado filtroValorAutorizado = new FiltroValorAutorizado();
 	

@@ -1,12 +1,13 @@
 package br.com.sgt.service.impl;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
-import br.com.sgt.entities.Usuario;
 import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.repository.api.UsuarioRepository;
 import br.com.sgt.repository.filtro.FiltroUsuario;
@@ -21,9 +22,12 @@ public class UsuarioBoundary implements UsuarioService, Serializable{
 	private UsuarioRepository usuarioRepository;
 
 	@Override
-	public List<UsuarioDTO> usuarioLogado(FiltroUsuario filtroUsuario) {
+	public UsuarioDTO usuarioLogado() {
 		try {
-			return usuarioRepository.buscarPorFiltro(filtroUsuario);
+			FacesContext facesContext =  FacesContext.getCurrentInstance();
+			ExternalContext externalContext = facesContext.getExternalContext();
+			HttpSession session = (HttpSession) externalContext.getSession(true);
+			return new UsuarioDTO((UsuarioDTO) session.getAttribute("autenticacaoBean"));
 		} catch (RuntimeException e) {
 			throw e;
 		}
