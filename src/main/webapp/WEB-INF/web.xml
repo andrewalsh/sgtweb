@@ -1,49 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	version="2.5">
-	<display-name>sgt</display-name>
-	<welcome-file-list>
-    	<welcome-file>pages/login.xhtml</welcome-file>
-  	</welcome-file-list>
-
-	<context-param>
-		<param-name>primefaces.THEME</param-name>
-		<param-value>sam</param-value>
-	</context-param>
-	
-	<context-param>
-		<param-name>primefaces.UPLOADER</param-name>
-		<param-value>native</param-value>
-	</context-param>
-	
-	<context-param>
-		<param-name>primefaces.FONT_AWESOME</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.xhtml</url-pattern>
-	</servlet-mapping>
-
-	<listener>
-		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
-	</listener>
-	
-	<listener>
-	 <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-    </listener>
-
-	<resource-env-ref>
-		<resource-env-ref-name>BeanManager</resource-env-ref-name>
-		<resource-env-ref-type>javax.enterprise.inject.spi.BeanManager</resource-env-ref-type>
-	</resource-env-ref>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>sgt</display-name>
+  <welcome-file-list>
+    <welcome-file>pages/login.xhtml</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>sam</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.UPLOADER</param-name>
+    <param-value>native</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.FONT_AWESOME</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+  <listener>
+    <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+  </listener>
+  <resource-env-ref>
+    <resource-env-ref-name>BeanManager</resource-env-ref-name>
+    <resource-env-ref-type>javax.enterprise.inject.spi.BeanManager</resource-env-ref-type>
+  </resource-env-ref>
+  <servlet>
+    <description></description>
+    <display-name>ReportServlet</display-name>
+    <servlet-name>ReportServlet</servlet-name>
+    <servlet-class>br.com.sgt.servlets.ReportServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReportServlet</servlet-name>
+    <url-pattern>/ReportServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
