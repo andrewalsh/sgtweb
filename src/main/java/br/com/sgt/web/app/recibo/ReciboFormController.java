@@ -1,5 +1,7 @@
 package br.com.sgt.web.app.recibo;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
@@ -22,8 +25,10 @@ import br.com.sgt.entities.Usuario;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.entities.dto.UsuarioDTO;
+import br.com.sgt.infra.report.ReportUtil;
 import br.com.sgt.pattern.builder.ReciboBuilder;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
+import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroSocio;
 import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 import br.com.sgt.repository.filtro.FiltroValorAutorizado;
@@ -73,6 +78,7 @@ public class ReciboFormController implements Serializable{
 	
 	
 	
+	@SuppressWarnings({ "unused", "unused" })
 	@PostConstruct
 	public void init() {
 		valorAutorizado = new ValorAutorizadoBuilder().gerar();
@@ -86,6 +92,19 @@ public class ReciboFormController implements Serializable{
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 		}
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		ServletContext sc = (ServletContext) fc.getExternalContext().getContext();
+		String realpath = sc.getRealPath("/WEB-INF/reports/Blank_A4.jasper");
+		new ReportUtil(realpath, teste());
+		byte[] bytes = ReportUtil.criarRelatorio();
+		try {
+			imprimir();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("");
 	}
 	
 	public void onRowDblClckSelect(SelectEvent event) {
@@ -238,5 +257,20 @@ public class ReciboFormController implements Serializable{
 
 	public void setUltimoPagamentoDaTarifa(UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa) {
 		this.ultimoPagamentoDaTarifa = ultimoPagamentoDaTarifa;
+	}
+	
+	
+	private List<Recibo> teste() {
+		FiltroRecibo filtro = new FiltroRecibo();
+		try {
+			return reciboService.listar(filtro);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+	
+	private void imprimir() throws IOException {
+		FacesContext.getCurrentInstance().getExternalContext()
+				.redirect("/sgt/relatorioServlet");
 	}
 }

@@ -13,15 +13,13 @@ public class ReportUtil implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String path = "/WEB-INF/reports/";
+	private static String relatorio;
 	
 	private static List<?> fonte;
 	
-	private static String relatorio;
-	
-	public ReportUtil(List<?> fonte, String relatorio) {
+	public ReportUtil(String relatorio, List<?> fonte) {
+		ReportUtil.relatorio = relatorio;
 		ReportUtil.fonte = fonte;
-		ReportUtil.relatorio = path + relatorio;
 	}
 
 	public static byte[] criarRelatorio(){

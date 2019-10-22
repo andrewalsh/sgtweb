@@ -23,6 +23,7 @@ public class ReportServlet extends HttpServlet {
     }
 
 
+	@SuppressWarnings("unused")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String caminho = getServletContext().getRealPath("/WEB-INF/reports/Blank_A4.jasper");
 		byte[] bytes = ReportUtil.criarRelatorio();
