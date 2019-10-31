@@ -69,7 +69,7 @@ and open the template in the editor.
 					</p:dataTable>
 		</h:form>
 		
-		<h:form id="formUltimoPagamento">
+		<h:form id="formUltimoPagamento" rendered="true">
 			<p:tabView>
 				<p:tab title="Último pagamento da tarifa selecionada">
 					<h:panelGrid id="dadosUltimoPagamento" columns="6" cellpadding="1" style="width: 50%;">
@@ -85,14 +85,14 @@ and open the template in the editor.
 							value="Mês:"/>
 						<h:outputText 
 							style="font-weight: bold;"
-							value="#{reciboFormController.ultimoPagamentoDaTarifa.mesBase}" />
+							value="#{reciboFormController.recibo.ultimoPagamento.mesBase}" />
 						
 						<p:outputLabel 
 							style="font-weight: bold;"     
 							value="Ano:"/>
 						<h:outputText 
 							style="font-weight: bold;"
-							value="#{reciboFormController.ultimoPagamentoDaTarifa.anoBase}" />
+							value="#{reciboFormController.recibo.ultimoPagamento.anoBase}" />
 					</h:panelGrid>
 				</p:tab>
 			</p:tabView>
@@ -172,6 +172,12 @@ and open the template in the editor.
 					</h:panelGrid>
 					<p:commandButton value="Salvar"  style="width: 7%;"
 						actionListener="#{reciboFormController.gerarRecibo()}"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"/>
+    					
+    				<p:commandButton value="Salvar"  style="width: 7%;"
+						actionListener="#{reciboFormController.imprimir()}"
 						onstart="PF('statusDialog').show();"
     					onsuccess="PF('statusDialog').hide();"
     					onerror="PF('statusDialog').hide();"/>

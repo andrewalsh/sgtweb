@@ -56,12 +56,25 @@ public class Recibo implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="ID_VALOR_AUTORIZADO", nullable=false)
 	private ValorAutorizado valorAutorizado;
+	
+	@Transient
+	private UltimoPagamentoDaTarifa ultimoPagamento;
 
 	@Transient
 	private Terreiro terreiro;
 	
+	
 	public Recibo() {
 	}
+
+	public Recibo(int anoBase, int mesBase, int idTerreiro, ValorAutorizado valorAutorizado) {
+		this.anoBase = anoBase;
+		this.mesBase = mesBase;
+		this.idTerreiro = idTerreiro;
+		this.valorAutorizado = valorAutorizado;
+	}
+
+
 
 	public Recibo(Recibo recibo) {
 		this.valorAutorizado = recibo.getValorAutorizado();
@@ -169,6 +182,14 @@ public class Recibo implements Serializable{
 		this.terreiro = terreiro;
 	}
 
+
+	public UltimoPagamentoDaTarifa getUltimoPagamento() {
+		return ultimoPagamento;
+	}
+
+	public void setUltimoPagamento(UltimoPagamentoDaTarifa ultimoPagamento) {
+		this.ultimoPagamento = ultimoPagamento;
+	}
 
 	@Override
 	public int hashCode() {

@@ -141,15 +141,21 @@ and open the template in the editor.
 						var="recibo"
 						selectionMode="single"
 						selection="#{recibo}" 
+						sortBy="#{recibo.valorAutorizado.tarifa.nomeTarifa}"
+						expandableRowGroups="true" 
+						expandedRow="false"
 						rowKey="#{recibo.idRecibo}">
 						
 						<p:ajax event="rowDblselect" listener="#{socioFormController.onRowDblClckSelect}"/>
 						
+						<p:headerRow>
+				            <p:column colspan="3">
+				                <h:outputText value="#{recibo.valorAutorizado.tarifa.nomeTarifa}" />
+				            </p:column>
+				        </p:headerRow>
+						
 						<p:column headerText="Recibo">
 							<h:outputText value="#{recibo.numeroRecibo}" />
-						</p:column>
-						<p:column headerText="Tarifa">
-							<h:outputText value="#{recibo.valorAutorizado.tarifa.nomeTarifa}" />
 						</p:column>
 						
 						<p:column headerText="Valor Pago">

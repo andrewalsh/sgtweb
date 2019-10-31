@@ -1,6 +1,8 @@
 package br.com.sgt.servlets;
 
 import java.io.IOException;
+
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -27,15 +29,19 @@ public class ReportServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String caminho = getServletContext().getRealPath("/WEB-INF/reports/Blank_A4.jasper");
 		byte[] bytes = ReportUtil.criarRelatorio();
+		String titulo = "Recibo";
 		
 		if(bytes != null && bytes.length > 0){
-			response.setContentType("application/pdf");
+			//response.setContentType("application/pdf");
+			response.setContentType("application/force-download");
+			response.setHeader("Content-Disposition", "attachment;filename=\""+ titulo + "\";");
 			response.setContentLength(bytes.length);
 			ServletOutputStream ouputStream = response.getOutputStream();
 			ouputStream.write(bytes, 0, bytes.length);
 			ouputStream.flush();
 			ouputStream.close();
 		}
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 
 	

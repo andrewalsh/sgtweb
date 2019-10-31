@@ -1,29 +1,26 @@
 package br.com.sgt.service.impl;
 
 import java.io.Serializable;
-import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 
 import javax.inject.Inject;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
-import br.com.sgt.dao.tx.Transacional;
+import com.ibm.icu.math.BigDecimal;
+
 import br.com.sgt.entities.Recibo;
-import br.com.sgt.entities.UltimoPagamentoDaTarifa;
+import br.com.sgt.entities.ValorAutorizado;
+import br.com.sgt.entities.dto.ReciboDTO;
+import br.com.sgt.pattern.observer.recibo.AcaoAposGerarRecibo;
+import br.com.sgt.pattern.observer.recibo.EnviarEmail;
+import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
+import br.com.sgt.pattern.observer.recibo.SalvarReciboNoBanco;
 import br.com.sgt.repository.api.ReciboRepository;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.TerreiroService;
-import br.com.sgt.service.api.UltimoPagamentoService;
 
 public class ReciboBoundary implements Serializable, ReciboService{
 
@@ -31,29 +28,36 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	@Inject
 	private ReciboRepository reciboRepository;
+
+	/*
+	@Inject
+	private UltimoPagamentoService ultimoPagamentoService;*/
 	
 	@Inject
-	private UltimoPagamentoService ultimoPagamentoService;
-
+	private SalvarReciboNoBanco salvarReciboNoBanco;
+	
+	
 	@Inject
-	private TerreiroService terreiroService;
+	private EnviarEmail enviarEmail;
+	
+	@Inject
+	private ImprimirRecibo imprimirRecibo;
+	
+	private List<AcaoAposGerarRecibo> acoes = new ArrayList<AcaoAposGerarRecibo>();
 	
 	
 	@Override
-	@Transacional
-	public Recibo salvar(Recibo recibo, UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa) {
+	
+	public void salvar(Recibo recibo) {
 		try {
-			recibo.setTerreiro(terreiroService.buscarTerreiro());
-			recibo.setValorRecibo(recibo.getValorAutorizado().getValorLiquido());
-			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
-					ultimoPagamentoDaTarifa.getIdUltimoPagamento(),
-					recibo.getValorAutorizado().getIdValorAutorizado(), 
-					recibo.getMesBase(), 
-					recibo.getAnoBase()));
-			return reciboRepository.salavar(recibo);
-		} catch (RuntimeException e) {
-			throw e;
+			acoesASeremExecutadas();
+			for (AcaoAposGerarRecibo acao : acoes) {
+				acao.executa(recibo);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro "+e.getMessage());
 		}
+		
 	}
 
 	@Override
@@ -81,40 +85,35 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	
 	public void enviar(Recibo recibo) {
-		try {
-			Properties properties = new Properties();
-			properties.put("mail.smtp.host", "smtp.gmail.com");
-			properties.put("mail.smtp.socketFactory.port", "465");
-			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			properties.put("mail.smtp.auth", "true");
-			properties.put("mail.smtp.port", "465");
-			
-			Session session = Session.getDefaultInstance(properties,
-				      new javax.mail.Authenticator() {
-				           protected PasswordAuthentication getPasswordAuthentication() 
-				           {
-				                 return new PasswordAuthentication(terreiroService.buscarTerreiro().getEmail(), 
-				                		 terreiroService.buscarTerreiro().getSenhaEmail());
-				           }
-				      });
-			
-			session.setDebug(true);
-			
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(recibo.getValorAutorizado().getSocio().getPessoa().getEmail()));
-			Address[] toUser = InternetAddress.parse(recibo.getValorAutorizado().getSocio().getPessoa().getEmail());
-			message.setRecipients(Message.RecipientType.TO, toUser);
-			message.setSubject(terreiroService.buscarTerreiro().getNome() + " - Recibo de pagamento");
-			message.setText("--------------------------------------------------------------\n" + "Recibo Nº: "
-					+ recibo.getNumeroRecibo() + "\n" + "Referente à: "
-					+ recibo.getValorAutorizado().getTarifa().getNomeTarifa() + "\n" + "Mês/Ano: "
-					+ recibo.getMesBase() + "/" + recibo.getAnoBase() + "\n" + "Valor pago: R$ " + recibo.getValorRecibo()
-					+ "\n" + "Data de pagamento: " + DateFormat.getDateInstance().format(recibo.getDataPagamento())
-					+ "\n" + "--------------------------------------------------------------");
-
-			Transport.send(message);
-		} catch (MessagingException | RuntimeException e) {
-			throw new RuntimeException(e.getMessage());
-		}
+		//
+	}
+	
+	
+	public ReciboDTO gerarReciboDTO(ValorAutorizado valorAutorizado) {
+		return new ReciboDTO()
+				.anoBase()
+				.mesBase()
+				.numeroRecibo()
+				.valorAutorizado(valorAutorizado.getIdValorAutorizado().intValue())
+				.dataPagamento(new Date())
+				.formaPagamento("Dinheiro")
+				.terreiroBairro()
+				.terreiroCep()
+				.terreiroCidade()
+				.terreiroEmail()
+				.terreiroEndereco()
+				.terreiroNome()
+				.terreiroSenhaEmail()
+				.terreiroSite()
+				.terreiroTelefone()
+				.terreiroUf()
+				.valorPago(new BigDecimal(70))
+				;
+	}
+	
+	private void acoesASeremExecutadas() {
+		acoes.add(salvarReciboNoBanco);
+		acoes.add(enviarEmail);
+		acoes.add(imprimirRecibo);
 	}
 }

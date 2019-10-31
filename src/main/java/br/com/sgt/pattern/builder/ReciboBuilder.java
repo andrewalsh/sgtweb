@@ -2,6 +2,7 @@ package br.com.sgt.pattern.builder;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -12,33 +13,44 @@ import br.com.sgt.entities.ValorAutorizado;
 
 public class ReciboBuilder {
 
-	private Recibo recibo = new Recibo();
+	private String numRecibo;
+	private int anoBase;
+	private int mesBse;
+	private Date dataPagamento;
+	private String formaPagamento;
+	private ValorAutorizado valorAutorizado;
+	private int idTerreiro;
 	
-	public ReciboBuilder(){
-		recibo.setValorAutorizado(new ValorAutorizado());
-		recibo.getValorAutorizado().setTarifa(new Tarifa());
-		recibo.getValorAutorizado().setSocio(new Socio());
-		recibo.setAnoBase(anoCorrente());
-		recibo.setMesBase(mesCorrente());
-		recibo.setNumeroRecibo(gerarNumeroRecibo());
-		recibo.setIdTerreiro(1);
-		recibo.setDataPagamento(Calendar.getInstance().getTime());
+	
+	
+	public ReciboBuilder numeroDoRecibo() {
+		this.numRecibo = gerarNumeroRecibo();
+		return this;
 	}
 	
-	public Recibo gerar() {
-		return new Recibo(recibo);
+	public ReciboBuilder referenteAoAno(int anoBase) {
+		this.anoBase = anoBase;
+		return this;
 	}
 	
-	private int mesCorrente() {
-		Calendar calendar = Calendar.getInstance();
-		int mes = calendar.get(Calendar.MONTH) + 1;
-		return mes;
+	public ReciboBuilder referenteAoMes(int anoBase) {
+		this.anoBase = anoBase;
+		return this;
 	}
 	
-	private int anoCorrente() {
-		Calendar calendar = Calendar.getInstance();
-		int ano = calendar.get(Calendar.YEAR);
-		return ano;
+	public ReciboBuilder pagoEm(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+		return this;
+	}
+	
+	public ReciboBuilder paraValorAutorizaado(ValorAutorizado valorAutorizado) {
+		this.valorAutorizado = valorAutorizado;
+		return this;
+	}
+	
+	public ReciboBuilder terreiroDeEmissao() {
+		this.idTerreiro = 1;
+		return this;
 	}
 	
 	private String gerarNumeroRecibo() {

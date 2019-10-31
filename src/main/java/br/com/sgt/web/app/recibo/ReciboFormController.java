@@ -1,39 +1,40 @@
 package br.com.sgt.web.app.recibo;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import br.com.sgt.entities.Recibo;
+import br.com.sgt.entities.Terreiro;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
-import br.com.sgt.entities.Usuario;
 import br.com.sgt.entities.ValorAutorizado;
+import br.com.sgt.entities.dto.ReciboDTO;
 import br.com.sgt.entities.dto.SocioDTO;
-import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.infra.report.ReportUtil;
 import br.com.sgt.pattern.builder.ReciboBuilder;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
+import br.com.sgt.pattern.factory.ReciboFactory;
+import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroSocio;
 import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 import br.com.sgt.repository.filtro.FiltroValorAutorizado;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
+import br.com.sgt.service.api.TerreiroService;
 import br.com.sgt.service.api.UltimoPagamentoService;
 import br.com.sgt.service.api.UsuarioService;
 import br.com.sgt.service.api.ValorAutorizadoService;
@@ -55,6 +56,10 @@ public class ReciboFormController implements Serializable{
 	
 	private String nomeSocio;
 	
+	private boolean exibeFormUltimoPagamento = false;
+	
+	private ReciboDTO reciboDTO = new ReciboDTO();
+	
 	@Inject
 	private ValorAutorizadoService valorAutorizadoService;
 	
@@ -68,7 +73,10 @@ public class ReciboFormController implements Serializable{
 	private UltimoPagamentoService ultimoPagamentoService;
 	
 	@Inject
-	UsuarioService usuarioService;
+	private TerreiroService terreiroService;
+	
+	@Inject
+	private ImprimirRecibo imprimirRecibo;
 	
 	private FiltroValorAutorizado filtroValorAutorizado = new FiltroValorAutorizado();
 	
@@ -78,38 +86,26 @@ public class ReciboFormController implements Serializable{
 	
 	
 	
-	@SuppressWarnings({ "unused", "unused" })
 	@PostConstruct
 	public void init() {
 		valorAutorizado = new ValorAutorizadoBuilder().gerar();
-		recibo = new ReciboBuilder().gerar();
+		recibo = new ReciboFactory().factory();
 		try {
 			popularSociosDTO();
 			valoresAutorizados = valorAutorizadoService.listarPorFiltro(filtroValorAutorizado);
+			recibo.setTerreiro(terreiroService.buscarTerreiro());
 		} catch (RuntimeException e) {
 			FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 					"Ocorreu um erro: "+e.getMessage());
 	        FacesContext facesContext = FacesContext.getCurrentInstance();
 	        facesContext.addMessage(null, facesMessage);
 		}
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		ServletContext sc = (ServletContext) fc.getExternalContext().getContext();
-		String realpath = sc.getRealPath("/WEB-INF/reports/Blank_A4.jasper");
-		new ReportUtil(realpath, teste());
-		byte[] bytes = ReportUtil.criarRelatorio();
-		try {
-			imprimir();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("");
 	}
 	
 	public void onRowDblClckSelect(SelectEvent event) {
 		valorAutorizado = (ValorAutorizado)event.getObject();
 		recibo.setValorAutorizado(valorAutorizado);
+		reciboDTO = reciboService.gerarReciboDTO(valorAutorizado);
 		ultimoPagamento(valorAutorizado);
 		RequestContext.getCurrentInstance().update("formRecibo");
 	}
@@ -127,11 +123,9 @@ public class ReciboFormController implements Serializable{
 
 	public void gerarRecibo() {
 		try {
-			Recibo toReturn = new ReciboBuilder().gerar();
-			toReturn = reciboService.salvar(recibo, ultimoPagamentoDaTarifa);
-			reciboService.enviarEmail(toReturn);
+			reciboService.salvar(recibo);
 			notificarSucesso("Operação realizada com sucesso!");
-	        
+	        exibeFormUltimoPagamento = false;
 	        init();
 	        
 	        RequestContext.getCurrentInstance().update("frmToolbar");
@@ -167,10 +161,16 @@ public class ReciboFormController implements Serializable{
 		}
 	}
 	
+	public void imprimir() {
+		imprimirRecibo.executa(recibo);
+	}
+	
 	private void ultimoPagamento(ValorAutorizado valorAutorizado) {
 		try {
-			ultimoPagamentoDaTarifa = ultimoPagamentoService.
-					buscarPorFiltro(new FiltroUltimoPagamento(valorAutorizado.getIdValorAutorizado()));
+			recibo.setUltimoPagamento(ultimoPagamentoService.
+					buscarPorFiltro(new FiltroUltimoPagamento(valorAutorizado.getIdValorAutorizado())));
+			renderizarFormUltimoPagamento();
+			RequestContext.getCurrentInstance().update("formUltimoPagamento");
 		} catch (RuntimeException e) {
 			notificarErro(e.getMessage());
 		}
@@ -185,7 +185,6 @@ public class ReciboFormController implements Serializable{
 		}
 	}
 	
-	
 	private void notificarSucesso(String sucesso) {
 		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO,null, sucesso);
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -197,6 +196,14 @@ public class ReciboFormController implements Serializable{
 				"Ocorreu um erro. "+erro);
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.addMessage(null, facesMessage);
+	}
+	
+	private void renderizarFormUltimoPagamento() {
+		if(Objects.nonNull(recibo.getUltimoPagamento().getIdUltimoPagamento()))
+			exibeFormUltimoPagamento = true;
+		else
+			exibeFormUltimoPagamento = false;
+			
 	}
 	
 	public List<ValorAutorizado> getValoresAutorizados() {
@@ -212,6 +219,10 @@ public class ReciboFormController implements Serializable{
 	}
 
 	public Recibo getRecibo() {
+		if(Objects.isNull(recibo)) {
+			recibo.setValorAutorizado(new ValorAutorizado());
+			recibo.setTerreiro(new Terreiro());
+		}
 		return recibo;
 	}
 
@@ -258,19 +269,8 @@ public class ReciboFormController implements Serializable{
 	public void setUltimoPagamentoDaTarifa(UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa) {
 		this.ultimoPagamentoDaTarifa = ultimoPagamentoDaTarifa;
 	}
-	
-	
-	private List<Recibo> teste() {
-		FiltroRecibo filtro = new FiltroRecibo();
-		try {
-			return reciboService.listar(filtro);
-		} catch (RuntimeException e) {
-			throw e;
-		}
-	}
-	
-	private void imprimir() throws IOException {
-		FacesContext.getCurrentInstance().getExternalContext()
-				.redirect("/sgt/relatorioServlet");
+
+	public boolean isExibeFormUltimoPagamento() {
+		return exibeFormUltimoPagamento;
 	}
 }
