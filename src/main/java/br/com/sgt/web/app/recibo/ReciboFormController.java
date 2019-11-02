@@ -1,8 +1,8 @@
 package br.com.sgt.web.app.recibo;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -21,14 +20,9 @@ import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.Terreiro;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
 import br.com.sgt.entities.ValorAutorizado;
-import br.com.sgt.entities.dto.ReciboDTO;
 import br.com.sgt.entities.dto.SocioDTO;
-import br.com.sgt.infra.report.ReportUtil;
-import br.com.sgt.pattern.builder.ReciboBuilder;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
-import br.com.sgt.pattern.factory.ReciboFactory;
 import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
-import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroSocio;
 import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 import br.com.sgt.repository.filtro.FiltroValorAutorizado;
@@ -36,7 +30,6 @@ import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TerreiroService;
 import br.com.sgt.service.api.UltimoPagamentoService;
-import br.com.sgt.service.api.UsuarioService;
 import br.com.sgt.service.api.ValorAutorizadoService;
 
 @Named("reciboFormController")
@@ -57,8 +50,6 @@ public class ReciboFormController implements Serializable{
 	private String nomeSocio;
 	
 	private boolean exibeFormUltimoPagamento = false;
-	
-	private ReciboDTO reciboDTO = new ReciboDTO();
 	
 	@Inject
 	private ValorAutorizadoService valorAutorizadoService;
@@ -89,7 +80,7 @@ public class ReciboFormController implements Serializable{
 	@PostConstruct
 	public void init() {
 		valorAutorizado = new ValorAutorizadoBuilder().gerar();
-		recibo = new ReciboFactory().factory();
+		inicializaRecibo();
 		try {
 			popularSociosDTO();
 			valoresAutorizados = valorAutorizadoService.listarPorFiltro(filtroValorAutorizado);
@@ -105,7 +96,6 @@ public class ReciboFormController implements Serializable{
 	public void onRowDblClckSelect(SelectEvent event) {
 		valorAutorizado = (ValorAutorizado)event.getObject();
 		recibo.setValorAutorizado(valorAutorizado);
-		reciboDTO = reciboService.gerarReciboDTO(valorAutorizado);
 		ultimoPagamento(valorAutorizado);
 		RequestContext.getCurrentInstance().update("formRecibo");
 	}
@@ -204,6 +194,14 @@ public class ReciboFormController implements Serializable{
 		else
 			exibeFormUltimoPagamento = false;
 			
+	}
+	
+	private void inicializaRecibo() {
+		if(Objects.isNull(recibo)) {
+			recibo = new Recibo();
+			recibo.setDataPagamento(new Date());
+			recibo.setTerreiro(new Terreiro());
+		}
 	}
 	
 	public List<ValorAutorizado> getValoresAutorizados() {

@@ -162,22 +162,9 @@ and open the template in the editor.
 							<f:selectItem itemLabel="Cheque" itemValue="Cheque" />
 							<p:ajax event="itemSelect" />
 						</p:selectOneMenu>
-						
-						<h:outputText value="Meses à pagar:" />
-						<p:spinner
-							id="mesesPagar"
-							min="#{12 - reciboFormController.ultimoPagamentoDaTarifa.mesBase}"
-							max="12"
-							/>
 					</h:panelGrid>
 					<p:commandButton value="Salvar"  style="width: 7%;"
 						actionListener="#{reciboFormController.gerarRecibo()}"
-						onstart="PF('statusDialog').show();"
-    					onsuccess="PF('statusDialog').hide();"
-    					onerror="PF('statusDialog').hide();"/>
-    					
-    				<p:commandButton value="Salvar"  style="width: 7%;"
-						actionListener="#{reciboFormController.imprimir()}"
 						onstart="PF('statusDialog').show();"
     					onsuccess="PF('statusDialog').hide();"
     					onerror="PF('statusDialog').hide();"/>

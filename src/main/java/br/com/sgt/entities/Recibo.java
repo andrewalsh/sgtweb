@@ -2,13 +2,16 @@ package br.com.sgt.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -50,39 +53,22 @@ public class Recibo implements Serializable{
 	@Column(name="VALOR", nullable=false, scale=3, precision=2)
 	private BigDecimal valorRecibo;
 	
-	@Column(name="ID_TERREIRO", nullable=false)
-	private int idTerreiro;
+	@ManyToOne
+	@JoinColumn(name="ID_TERREIRO", nullable=false)
+	private Terreiro terreiro;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="ID_VALOR_AUTORIZADO", nullable=false)
 	private ValorAutorizado valorAutorizado;
 	
 	@Transient
 	private UltimoPagamentoDaTarifa ultimoPagamento;
-
-	@Transient
-	private Terreiro terreiro;
 	
 	
 	public Recibo() {
-	}
-
-	public Recibo(int anoBase, int mesBase, int idTerreiro, ValorAutorizado valorAutorizado) {
-		this.anoBase = anoBase;
-		this.mesBase = mesBase;
-		this.idTerreiro = idTerreiro;
-		this.valorAutorizado = valorAutorizado;
-	}
-
-
-
-	public Recibo(Recibo recibo) {
-		this.valorAutorizado = recibo.getValorAutorizado();
-		this.idTerreiro = recibo.getIdTerreiro();
-		this.numeroRecibo = recibo.getNumeroRecibo();
-		this.anoBase = recibo.getAnoBase();
-		this.mesBase = recibo.getMesBase();
-		this.dataPagamento = recibo.getDataPagamento();
+		setAnoBase(anoCorrente());
+		setMesBase(mesCorrente());
+		setNumeroRecibo(gerarNumeroRecibo());
 	}
 
 	public Long getIdRecibo() {
@@ -155,13 +141,13 @@ public class Recibo implements Serializable{
 	}
 
 
-	public int getIdTerreiro() {
-		return idTerreiro;
+	public Terreiro getIdTerreiro() {
+		return terreiro;
 	}
 
 
-	public void setIdTerreiro(int idTerreiro) {
-		this.idTerreiro = idTerreiro;
+	public void setTerreiro(Terreiro terreiro) {
+		this.terreiro = terreiro;
 	}
 
 
@@ -178,11 +164,6 @@ public class Recibo implements Serializable{
 		return terreiro;
 	}
 	
-	public void setTerreiro(Terreiro terreiro) {
-		this.terreiro = terreiro;
-	}
-
-
 	public UltimoPagamentoDaTarifa getUltimoPagamento() {
 		return ultimoPagamento;
 	}
@@ -242,7 +223,7 @@ public class Recibo implements Serializable{
 		builder.append(", valorRecibo=");
 		builder.append(valorRecibo);
 		builder.append(", idTerreiro=");
-		builder.append(idTerreiro);
+		builder.append(terreiro.getIdTerreiro());
 		builder.append(", valorAutorizado=");
 		builder.append(valorAutorizado);
 		builder.append("]");
@@ -253,5 +234,22 @@ public class Recibo implements Serializable{
 		return Arrays.asList("Dinheiro", "Cartao de Credito", "TED", "Cartao de Debito", "Deposito", "Cheque");
 	}
 	
+	private int mesCorrente() {
+		Calendar calendar = Calendar.getInstance();
+		int mes = calendar.get(Calendar.MONTH) + 1;
+		return mes;
+	}
+
+	private int anoCorrente() {
+		Calendar calendar = Calendar.getInstance();
+		int ano = calendar.get(Calendar.YEAR);
+		return ano;
+	}
 	
+	private String gerarNumeroRecibo() {
+		Locale locale = new Locale("pt", "BR");
+		GregorianCalendar calendar = new GregorianCalendar();
+		SimpleDateFormat formatador = new SimpleDateFormat("yyMMddHHmmss", locale);
+		return formatador.format(calendar.getTime());
+	}
 }

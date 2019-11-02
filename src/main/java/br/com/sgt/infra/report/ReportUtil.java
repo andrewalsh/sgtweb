@@ -36,4 +36,8 @@ public class ReportUtil implements Serializable{
 		}
 		return bytes;
 	}
+	
+	public static List<?> getRelatorio(){
+		return fonte;
+	}
 }

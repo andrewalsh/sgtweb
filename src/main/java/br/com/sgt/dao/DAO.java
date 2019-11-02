@@ -30,6 +30,7 @@ public class DAO<T> {
 		T persistencia;
 
 		persistencia = em.merge(t);
+		//em.flush();
 
 		return persistencia;
 	}

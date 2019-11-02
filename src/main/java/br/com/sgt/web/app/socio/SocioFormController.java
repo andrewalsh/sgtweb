@@ -26,6 +26,7 @@ import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
 import br.com.sgt.helper.MessageHelper;
+import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroTarifa;
 import br.com.sgt.service.api.ReciboService;
@@ -77,6 +78,9 @@ public class SocioFormController implements Serializable{
 	
 	@Inject
 	private MessageHelper helper;
+	
+	@Inject
+	private ImprimirRecibo imprimirRecibo;
 	
 	@PostConstruct
 	public void init() {
@@ -155,6 +159,12 @@ public class SocioFormController implements Serializable{
 		RequestContext.getCurrentInstance().execute("PF('popUpValorAutorizadoEditar').show()");
 	}
 	
+	public void onRowReciboDblClckSelect(SelectEvent event) {
+		Recibo recibo = new Recibo();
+		recibo = (Recibo) event.getObject();
+		imprimirRecibo.executa(recibo);
+	}
+	
 	public void salvarValorAutorizado() {
 		try {
 			va.setSocio(socio);
@@ -172,6 +182,7 @@ public class SocioFormController implements Serializable{
 	
 	public void novo() {
 		this.socio = new Socio();
+		this.socio.setPessoa(new Pessoa());
 		va = valorAutorizadoService.valorAutorizadoBuilder();
 	}
 	

@@ -23,12 +23,11 @@ and open the template in the editor.
 				<f:facet name="left">
 					<p:commandButton 
 						value="Novo" 
-						icon="fa fa-plus" 
-						/>
+						actionListener="#{socioFormController.novo()}"
+						update="formSocio"/>
 						
 					<p:commandButton  
 						value="Salvar" 
-						icon="fa fa-fa-floppy-o" 
 						actionListener="#{socioFormController.salvar()}"
 						onstart="PF('statusDialog').show();"
     					onsuccess="PF('statusDialog').hide();"
@@ -146,7 +145,7 @@ and open the template in the editor.
 						expandedRow="false"
 						rowKey="#{recibo.idRecibo}">
 						
-						<p:ajax event="rowDblselect" listener="#{socioFormController.onRowDblClckSelect}"/>
+						<p:ajax event="rowDblselect" listener="#{socioFormController.onRowReciboDblClckSelect}"/>
 						
 						<p:headerRow>
 				            <p:column colspan="3">
@@ -176,7 +175,8 @@ and open the template in the editor.
 		</h:form>
 		
 		<h:form id="formPopUpNovo">
-			<p:dialog header="Modal Dialog" widgetVar="popUpValorAutorizadoNovo" modal="true" closable="true" height="150">
+			<p:dialog header="Autorização de Valores do Médium | Sócio" widgetVar="popUpValorAutorizadoNovo" 
+				modal="true" closable="false" height="150">
     			<h:panelGrid columns="2" cellpadding="2">
     				<h:outputLabel value="Tarifa" />
     				<p:selectOneMenu value="#{socioFormController.idTarifa}">
@@ -201,6 +201,9 @@ and open the template in the editor.
     					actionListener="#{socioFormController.salvarValorAutorizado()}"
     					oncomplete="PF('popUpValorAutorizadoNovo').hide();"
     					update=":formSocio"></p:commandButton>
+    					
+    				<p:commandButton value="Fechar" 
+    					onclick="PF('popUpValorAutorizadoNovo').hide();"/>
     			</h:panelGrid>
 			</p:dialog>
 		</h:form>

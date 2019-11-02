@@ -14,6 +14,4 @@ public interface ReciboService {
 	void salvar(Recibo recibo);
 	
 	void enviarEmail(Recibo recibo);
-	
-	ReciboDTO gerarReciboDTO(ValorAutorizado valorAutorizado);
 }

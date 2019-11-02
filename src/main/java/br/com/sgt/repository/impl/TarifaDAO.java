@@ -46,6 +46,7 @@ public class TarifaDAO implements TarifaRepository, Serializable{
 
 	public Tarifa atualizar(Tarifa tarifa) {
 		Tarifa toReturn = new Tarifa();
+		
 		try {
 			toReturn = dao.atualizar(tarifa);
 		} catch (RuntimeException e) {

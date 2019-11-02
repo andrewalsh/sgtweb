@@ -1,17 +1,8 @@
 package br.com.sgt.entities.dto;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-
-import javax.inject.Inject;
-
-import com.ibm.icu.math.BigDecimal;
-
-import br.com.sgt.service.api.TerreiroService;
 
 public class ReciboDTO implements Serializable{
 
@@ -37,172 +28,127 @@ public class ReciboDTO implements Serializable{
 	private String socioNome;
 	private String socioCpf;
 	private String tarifaDescricao;
-	
-	@Inject
-	private TerreiroService terreiroService;
-	
-	public ReciboDTO anoBase() {
-		this.anoBase = anoCorrente();
-		return this;
-	}
-	public ReciboDTO mesBase() {
-		this.mesBase = mesCorrente();
-		return this;
-		
-	}
-	public ReciboDTO dataPagamento(Date dataPagamento) {
-		this.dataPagamento = dataPagamento;
-		return this;
-	}
-	public ReciboDTO formaPagamento(String formaPagamento) {
-		this.formaPagamento = formaPagamento;
-		return this;
-	}
-	public ReciboDTO numeroRecibo() {
-		this.numeroRecibo = gerarNumeroRecibo();
-		return this;
-	}
-	public ReciboDTO valorPago(BigDecimal valorPago) {
-		this.valorPago = valorPago;
-		return this;
-	}
-	public ReciboDTO valorAutorizado(int valorAutorizado) {
-		this.valorAutorizado = valorAutorizado;
-		return this;
-	}
-	public ReciboDTO terreiroNome() {
-		this.terreiroNome = terreiroService.buscarTerreiro().getNome();
-		return this;
-	}
-	public ReciboDTO terreiroEndereco() {
-		this.terreiroEndereco = terreiroService.buscarTerreiro().getEndereco();
-		return this;
-	}
-	public ReciboDTO terreiroSite() {
-		this.terreiroSite = terreiroService.buscarTerreiro().getSite();
-		return this;
-	}
-	public ReciboDTO terreiroEmail() {
-		this.terreiroEmail = terreiroService.buscarTerreiro().getEmail();
-		return this;
-	}
-	public ReciboDTO terreiroSenhaEmail() {
-		this.terreiroSenhaEmail = terreiroService.buscarTerreiro().getSenhaEmail();
-		return this;
-	}
-	public ReciboDTO terreiroBairro() {
-		this.terreiroBairro = terreiroService.buscarTerreiro().getBairro();
-		return this;
-	}
-	public ReciboDTO terreiroCidade() {
-		this.terreiroCidade = terreiroService.buscarTerreiro().getCidade();
-		return this;
-	}
-	public ReciboDTO terreiroUf() {
-		this.terreiroUf = terreiroService.buscarTerreiro().getUf();
-		return this;
-	}
-	public ReciboDTO terreiroCep() {
-		this.terreiroCep = terreiroService.buscarTerreiro().getCep();
-		return this;
-	}
-	public ReciboDTO terreiroTelefone() {
-		this.terreiroTelefone = terreiroService.buscarTerreiro().getTelefone();
-		return this;
-	}
-	public ReciboDTO socioNome(String socioNome) {
-		this.socioNome = socioNome;
-		return this;
-	}
-	public ReciboDTO socioCpf(String socioCpf) {
-		this.socioCpf = socioCpf;
-		return this;
-	}
-	public ReciboDTO tarifaDescricao(String tarifaDescricao) {
-		this.tarifaDescricao = tarifaDescricao;
-		return this;
-	}
-
-	
 	public int getAnoBase() {
 		return anoBase;
+	}
+	public void setAnoBase(int anoBase) {
+		this.anoBase = anoBase;
 	}
 	public int getMesBase() {
 		return mesBase;
 	}
+	public void setMesBase(int mesBase) {
+		this.mesBase = mesBase;
+	}
 	public Date getDataPagamento() {
 		return dataPagamento;
+	}
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
 	}
 	public String getFormaPagamento() {
 		return formaPagamento;
 	}
+	public void setFormaPagamento(String formaPagamento) {
+		this.formaPagamento = formaPagamento;
+	}
 	public String getNumeroRecibo() {
 		return numeroRecibo;
+	}
+	public void setNumeroRecibo(String numeroRecibo) {
+		this.numeroRecibo = numeroRecibo;
 	}
 	public BigDecimal getValorPago() {
 		return valorPago;
 	}
+	public void setValorPago(BigDecimal valorPago) {
+		this.valorPago = valorPago;
+	}
 	public int getValorAutorizado() {
 		return valorAutorizado;
+	}
+	public void setValorAutorizado(int valorAutorizado) {
+		this.valorAutorizado = valorAutorizado;
 	}
 	public String getTerreiroNome() {
 		return terreiroNome;
 	}
+	public void setTerreiroNome(String terreiroNome) {
+		this.terreiroNome = terreiroNome;
+	}
 	public String getTerreiroEndereco() {
 		return terreiroEndereco;
+	}
+	public void setTerreiroEndereco(String terreiroEndereco) {
+		this.terreiroEndereco = terreiroEndereco;
 	}
 	public String getTerreiroSite() {
 		return terreiroSite;
 	}
+	public void setTerreiroSite(String terreiroSite) {
+		this.terreiroSite = terreiroSite;
+	}
 	public String getTerreiroEmail() {
 		return terreiroEmail;
+	}
+	public void setTerreiroEmail(String terreiroEmail) {
+		this.terreiroEmail = terreiroEmail;
 	}
 	public String getTerreiroSenhaEmail() {
 		return terreiroSenhaEmail;
 	}
+	public void setTerreiroSenhaEmail(String terreiroSenhaEmail) {
+		this.terreiroSenhaEmail = terreiroSenhaEmail;
+	}
 	public String getTerreiroBairro() {
 		return terreiroBairro;
+	}
+	public void setTerreiroBairro(String terreiroBairro) {
+		this.terreiroBairro = terreiroBairro;
 	}
 	public String getTerreiroCidade() {
 		return terreiroCidade;
 	}
+	public void setTerreiroCidade(String terreiroCidade) {
+		this.terreiroCidade = terreiroCidade;
+	}
 	public String getTerreiroUf() {
 		return terreiroUf;
+	}
+	public void setTerreiroUf(String terreiroUf) {
+		this.terreiroUf = terreiroUf;
 	}
 	public String getTerreiroCep() {
 		return terreiroCep;
 	}
+	public void setTerreiroCep(String terreiroCep) {
+		this.terreiroCep = terreiroCep;
+	}
 	public String getTerreiroTelefone() {
 		return terreiroTelefone;
+	}
+	public void setTerreiroTelefone(String terreiroTelefone) {
+		this.terreiroTelefone = terreiroTelefone;
 	}
 	public String getSocioNome() {
 		return socioNome;
 	}
+	public void setSocioNome(String socioNome) {
+		this.socioNome = socioNome;
+	}
 	public String getSocioCpf() {
 		return socioCpf;
+	}
+	public void setSocioCpf(String socioCpf) {
+		this.socioCpf = socioCpf;
 	}
 	public String getTarifaDescricao() {
 		return tarifaDescricao;
 	}
-	
-	
-	private int mesCorrente() {
-		Calendar calendar = Calendar.getInstance();
-		int mes = calendar.get(Calendar.MONTH) + 1;
-		return mes;
+	public void setTarifaDescricao(String tarifaDescricao) {
+		this.tarifaDescricao = tarifaDescricao;
 	}
 	
-	private int anoCorrente() {
-		Calendar calendar = Calendar.getInstance();
-		int ano = calendar.get(Calendar.YEAR);
-		return ano;
-	}
 	
-	private String gerarNumeroRecibo() {
-		Locale locale = new Locale("pt", "BR");
-		GregorianCalendar calendar = new GregorianCalendar();
-		SimpleDateFormat formatador = new SimpleDateFormat("yyMMddHHmmss", locale);
-		return formatador.format(calendar.getTime());
-	}
-
+	
 }
