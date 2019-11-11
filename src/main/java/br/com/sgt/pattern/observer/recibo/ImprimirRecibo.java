@@ -47,7 +47,7 @@ public class ImprimirRecibo implements Serializable, AcaoAposGerarRecibo{
 
 	private ReciboDTO populaReciboDTO(Recibo recibo) {
 		ReciboDTO dto = new ReciboDTO();
-		dto.setValorPago(recibo.getValorRecibo());
+		dto.setValorPago(recibo.getValorAutorizado().getValorLiquido());
 		dto.setAnoBase(recibo.getAnoBase());
 		dto.setDataPagamento(recibo.getDataPagamento());
 		dto.setFormaPagamento(recibo.getFormaPagamento());
