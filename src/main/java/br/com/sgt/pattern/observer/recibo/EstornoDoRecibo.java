@@ -22,6 +22,7 @@ public class EstornoDoRecibo implements Serializable, AcaoAposGerarRecibo{
 	private UltimoPagamentoService ultimoPagamentoService;
 
 	@Override
+	@Transacional
 	public void executa(Recibo recibo) {
 		if(recibo.getAnoBase() == anoCorrente()){
 			executaEstornoMesmoAno(recibo);
@@ -31,28 +32,30 @@ public class EstornoDoRecibo implements Serializable, AcaoAposGerarRecibo{
 		}
 	}
 	
-	@Transacional
+	
 	private void executaEstornoAnoDiferente(Recibo recibo) {
 		try {
-			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
+			recibo.setEstornado("S");
+			/*ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
 					recibo.getUltimoPagamento().getIdUltimoPagamento(),
 					recibo.getValorAutorizado().getIdValorAutorizado(), 
 					1, 
-					recibo.getAnoBase() -1));
+					recibo.getAnoBase() -1));*/
 			reciboRepository.salavar(recibo);
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Ocorreu um erro ao salvar o recibo no banco "+e.getMessage());
 		}
 	}
 
-	@Transacional
+	
 	private void executaEstornoMesmoAno(Recibo recibo) {
 		try {
-			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
+			recibo.setEstornado("S");
+			/*ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
 					recibo.getUltimoPagamento().getIdUltimoPagamento(),
 					recibo.getValorAutorizado().getIdValorAutorizado(), 
 					recibo.getMesBase() -1, 
-					recibo.getAnoBase()));
+					recibo.getAnoBase()));*/
 			reciboRepository.salavar(recibo);
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Ocorreu um erro ao salvar o recibo no banco "+e.getMessage());

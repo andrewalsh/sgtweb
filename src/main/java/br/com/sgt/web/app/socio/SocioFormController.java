@@ -29,9 +29,11 @@ import br.com.sgt.helper.MessageHelper;
 import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroTarifa;
+import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TarifaService;
+import br.com.sgt.service.api.UltimoPagamentoService;
 import br.com.sgt.service.api.ValorAutorizadoService;
 
 @Named("socioFormController")
@@ -64,6 +66,8 @@ public class SocioFormController implements Serializable{
 	
 	private String action;
 	
+	private Recibo recibo = new Recibo();
+	
 	@Inject
 	private SocioService socioService;
 	
@@ -81,6 +85,9 @@ public class SocioFormController implements Serializable{
 	
 	@Inject
 	private ImprimirRecibo imprimirRecibo;
+	
+	@Inject
+	private UltimoPagamentoService ultimoPagamentoService;
 	
 	@PostConstruct
 	public void init() {
@@ -160,9 +167,10 @@ public class SocioFormController implements Serializable{
 	}
 	
 	public void onRowReciboDblClckSelect(SelectEvent event) {
-		Recibo recibo = new Recibo();
 		recibo = (Recibo) event.getObject();
-		imprimirRecibo.executa(recibo);
+		recibo.setUltimoPagamento(ultimoPagamentoService.
+				buscarPorFiltro(new FiltroUltimoPagamento(recibo.getValorAutorizado().getIdValorAutorizado())));
+		//imprimirRecibo.executa(recibo);
 	}
 	
 	public void salvarValorAutorizado() {
@@ -186,6 +194,21 @@ public class SocioFormController implements Serializable{
 		va = valorAutorizadoService.valorAutorizadoBuilder();
 	}
 	
+	public void estornarRecibo() {
+		try {
+			reciboService.estorno(recibo);
+		} catch (RuntimeException e) {
+			helper.notificarErro(e.getMessage());
+		}
+	}
+	
+	public void imprimirSegundaViaDoSocio() {
+		try {
+			imprimirRecibo.executa(recibo);
+		} catch (RuntimeException e) {
+			helper.notificarErro(e.getMessage());
+		}
+	}
 	
 	private void popularSocio(String id) {
 		Long idSocio = null;
@@ -225,18 +248,6 @@ public class SocioFormController implements Serializable{
 		}
 	}
 	
-	/*private void notificarErro(String erro) {
-		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-				"Ocorreu um erro : "+erro);
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage(null, facesMessage);
-	}
-	
-	private void notificacaoSucesso(String sucesso) {
-		FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, null, sucesso);
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage(null, facesMessage);
-	}*/
 	
 	private int anoCorrente() {
 		Calendar calendar = Calendar.getInstance();

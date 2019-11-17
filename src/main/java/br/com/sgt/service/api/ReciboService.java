@@ -3,8 +3,6 @@ package br.com.sgt.service.api;
 import java.util.List;
 
 import br.com.sgt.entities.Recibo;
-import br.com.sgt.entities.ValorAutorizado;
-import br.com.sgt.entities.dto.ReciboDTO;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 
 public interface ReciboService {
@@ -13,5 +11,5 @@ public interface ReciboService {
 	
 	void salvar(Recibo recibo);
 	
-	void enviarEmail(Recibo recibo);
+	void estorno(Recibo recibo);
 }

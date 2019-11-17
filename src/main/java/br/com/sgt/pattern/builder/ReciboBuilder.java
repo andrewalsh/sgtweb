@@ -1,14 +1,10 @@
 package br.com.sgt.pattern.builder;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import br.com.sgt.entities.Recibo;
-import br.com.sgt.entities.Socio;
-import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
 
 public class ReciboBuilder {

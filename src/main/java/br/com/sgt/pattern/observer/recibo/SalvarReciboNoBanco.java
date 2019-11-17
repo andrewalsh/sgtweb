@@ -11,7 +11,6 @@ import br.com.sgt.dao.tx.Transacional;
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
 import br.com.sgt.repository.api.ReciboRepository;
-import br.com.sgt.service.api.TerreiroService;
 import br.com.sgt.service.api.UltimoPagamentoService;
 
 public class SalvarReciboNoBanco implements Serializable, AcaoAposGerarRecibo{
@@ -32,6 +31,7 @@ public class SalvarReciboNoBanco implements Serializable, AcaoAposGerarRecibo{
 	public void executa(Recibo recibo) {
 		try {
 			//recibo.setTerreiro(terreiroService.buscarTerreiro());
+			recibo.setEstornado("N");
 			recibo.setValorRecibo(recibo.getValorAutorizado().getValorLiquido());
 			recibo.setNumeroRecibo(gerarNumeroRecibo());
 			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(

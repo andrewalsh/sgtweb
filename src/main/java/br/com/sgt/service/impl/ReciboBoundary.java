@@ -3,13 +3,14 @@ package br.com.sgt.service.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.pattern.observer.recibo.AcaoAposGerarRecibo;
 import br.com.sgt.pattern.observer.recibo.EnviarEmail;
+import br.com.sgt.pattern.observer.recibo.EnviarEmailEstorno;
+import br.com.sgt.pattern.observer.recibo.EstornoDoRecibo;
 import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.pattern.observer.recibo.SalvarReciboNoBanco;
 import br.com.sgt.repository.api.ReciboRepository;
@@ -30,12 +31,17 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	@Inject
 	private SalvarReciboNoBanco salvarReciboNoBanco;
 	
-	
 	@Inject
 	private EnviarEmail enviarEmail;
 	
+	@Inject 
+	private EnviarEmailEstorno enviarEmailEstorno;
+	
 	@Inject
 	private ImprimirRecibo imprimirRecibo;
+	
+	@Inject
+	private EstornoDoRecibo estorno;
 	
 	private List<AcaoAposGerarRecibo> acoes = new ArrayList<AcaoAposGerarRecibo>();
 	
@@ -51,10 +57,21 @@ public class ReciboBoundary implements Serializable, ReciboService{
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Ocorreu um erro "+e.getMessage());
 		}
-		
+	}
+	
+	@Override
+	public void estorno(Recibo recibo) {
+		try {
+			acoesASeremExecutadasParaEstorno();
+			for (AcaoAposGerarRecibo acao : acoes) {
+				acao.executa(recibo);
+			}
+		} catch (RuntimeException e) {
+			throw new RuntimeException("Ocorreu um erro "+e.getMessage());
+		}
 	}
 
-	@Override
+	/*@Override
 	public void enviarEmail(Recibo recibo) {
 		if(Objects.nonNull(recibo.getValorAutorizado().getSocio().getPessoa().getEmail())) {
 			try {
@@ -66,7 +83,7 @@ public class ReciboBoundary implements Serializable, ReciboService{
 		else {
 			return;
 		}
-	}
+	}*/
 	
 	@Override
 	public List<Recibo> listar(FiltroRecibo filtro) {
@@ -76,11 +93,7 @@ public class ReciboBoundary implements Serializable, ReciboService{
 			throw e;
 		}
 	}
-	
-	
-	public void enviar(Recibo recibo) {
-		//
-	}
+
 	
 	
 	private void acoesASeremExecutadas() {
@@ -88,4 +101,10 @@ public class ReciboBoundary implements Serializable, ReciboService{
 		acoes.add(enviarEmail);
 		acoes.add(imprimirRecibo);
 	}
+	
+	private void acoesASeremExecutadasParaEstorno() {
+		acoes.add(estorno);
+		acoes.add(enviarEmailEstorno);
+	}
+
 }

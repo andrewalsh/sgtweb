@@ -134,6 +134,14 @@ and open the template in the editor.
 				</p:tab>
 				
 				<p:tab title="Histórico de Recibos">
+					<p:commandButton
+						id="estorno" value="Estornar Recibo"
+						actionListener="#{socioFormController.estornarRecibo()}"/>
+						
+					<p:commandButton
+						id="segundaVia" value="2ª via do Recibo"
+						actionListener="#{socioFormController.imprimirSegundaViaDoSocio()}"/>	
+					
 					<p:dataTable 
 						id="tblRecibos"
 						value="#{socioFormController.recibosDoSocio}" 
@@ -145,7 +153,7 @@ and open the template in the editor.
 						expandedRow="false"
 						rowKey="#{recibo.idRecibo}">
 						
-						<p:ajax event="rowDblselect" listener="#{socioFormController.onRowReciboDblClckSelect}"/>
+						<p:ajax event="rowSelect" listener="#{socioFormController.onRowReciboDblClckSelect}"/>
 						
 						<p:headerRow>
 				            <p:column colspan="3">

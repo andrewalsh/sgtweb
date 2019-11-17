@@ -8,5 +8,7 @@ public interface UltimoPagamentoService {
 	UltimoPagamentoDaTarifa buscarPorFiltro(FiltroUltimoPagamento filtroUltimoPagamento);
 	
 	UltimoPagamentoDaTarifa salvar(UltimoPagamentoDaTarifa ultimoPagamento);
+	
+	UltimoPagamentoDaTarifa atualizar(UltimoPagamentoDaTarifa ultimoPagamento);
 
 }

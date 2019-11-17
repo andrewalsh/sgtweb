@@ -18,8 +18,7 @@ import javax.mail.internet.MimeMessage;
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.service.api.TerreiroService;
 
-public class EnviarEmail implements Serializable, AcaoAposGerarRecibo{
-
+public class EnviarEmailEstorno implements Serializable, AcaoAposGerarRecibo{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -67,7 +66,7 @@ public class EnviarEmail implements Serializable, AcaoAposGerarRecibo{
 			Address[] toUser = InternetAddress.parse(recibo.getValorAutorizado().getSocio().getPessoa().getEmail());
 			message.setRecipients(Message.RecipientType.TO, toUser);
 			message.setSubject(terreiroService.buscarTerreiro().getNome());
-			message.setText("--------------------------------------------------------------\n" + "Recibo Nº: "
+			message.setText("--------------------------------------------------------------\n" + "Estorno de Recibo "
 					+ recibo.getNumeroRecibo() + "\n" + "Referente à: "
 					+ recibo.getValorAutorizado().getTarifa().getNomeTarifa() + "\n" + "Mês/Ano: "
 					+ recibo.getMesBase() + "/" + recibo.getAnoBase() + "\n" + "Valor pago: R$ " + recibo.getValorRecibo()
@@ -79,5 +78,6 @@ public class EnviarEmail implements Serializable, AcaoAposGerarRecibo{
 			throw new RuntimeException("Ocorreu um erro ao enviar o e-mail "+e.getMessage());
 		}
 	}
+
 
 }

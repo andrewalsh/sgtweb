@@ -40,4 +40,10 @@ public class UltimoPagamentoBoundary implements Serializable, UltimoPagamentoSer
 		}
 	}
 
+	@Override
+	public UltimoPagamentoDaTarifa atualizar(UltimoPagamentoDaTarifa ultimoPagamento) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

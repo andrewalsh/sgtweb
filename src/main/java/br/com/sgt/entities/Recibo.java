@@ -53,6 +53,9 @@ public class Recibo implements Serializable{
 	@Column(name="VALOR", nullable=false, scale=3, precision=2)
 	private BigDecimal valorRecibo;
 	
+	@Column(name="RECIBO_ESTORNADO", nullable=false)
+	private String estornado;
+	
 	@ManyToOne
 	@JoinColumn(name="ID_TERREIRO", nullable=false)
 	private Terreiro terreiro;
@@ -170,6 +173,12 @@ public class Recibo implements Serializable{
 
 	public void setUltimoPagamento(UltimoPagamentoDaTarifa ultimoPagamento) {
 		this.ultimoPagamento = ultimoPagamento;
+	}
+	public String getEstornado() {
+		return estornado;
+	}
+	public void setEstornado(String estornado) {
+		this.estornado = estornado;
 	}
 
 	@Override
