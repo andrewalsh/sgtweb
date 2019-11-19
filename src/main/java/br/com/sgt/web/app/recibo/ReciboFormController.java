@@ -21,6 +21,7 @@ import br.com.sgt.entities.Terreiro;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
+import br.com.sgt.helper.MessageHelper;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
 import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.repository.filtro.FiltroSocio;
@@ -40,6 +41,8 @@ public class ReciboFormController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Recibo recibo;
+	
+	private Recibo ultimoPagamento;
 	
 	private ValorAutorizado valorAutorizado;
 	
@@ -68,6 +71,9 @@ public class ReciboFormController implements Serializable{
 	
 	@Inject
 	private ImprimirRecibo imprimirRecibo;
+	
+	@Inject
+	private MessageHelper helper;
 	
 	private FiltroValorAutorizado filtroValorAutorizado = new FiltroValorAutorizado();
 	
@@ -114,7 +120,7 @@ public class ReciboFormController implements Serializable{
 	public void gerarRecibo() {
 		try {
 			reciboService.salvar(recibo);
-			notificarSucesso("Operação realizada com sucesso!");
+			//notificarSucesso("Operação realizada com sucesso!");
 	        exibeFormUltimoPagamento = false;
 	        init();
 	        
@@ -122,8 +128,9 @@ public class ReciboFormController implements Serializable{
 	        RequestContext.getCurrentInstance().update("formValorAutorizado");
 	        RequestContext.getCurrentInstance().update("formRecibo");
 	        
+	        helper.notificacaoSucesso("Operação realizada com sucesso!");
 		} catch (RuntimeException e) {
-			notificarErro(e.getMessage());
+			helper.notificarErro(e.getMessage());
 		}
 	}
 
@@ -157,9 +164,14 @@ public class ReciboFormController implements Serializable{
 	
 	private void ultimoPagamento(ValorAutorizado valorAutorizado) {
 		try {
-			recibo.setUltimoPagamento(ultimoPagamentoService.
+			/*recibo.setUltimoPagamento(ultimoPagamentoService.
 					buscarPorFiltro(new FiltroUltimoPagamento(valorAutorizado.getIdValorAutorizado())));
-			renderizarFormUltimoPagamento();
+			renderizarFormUltimoPagamento();*/
+			
+			ultimoPagamento = new Recibo();
+			
+			ultimoPagamento = reciboService.ultimoPagamentoDaTarifa(valorAutorizado.getIdValorAutorizado());
+			
 			RequestContext.getCurrentInstance().update("formUltimoPagamento");
 		} catch (RuntimeException e) {
 			notificarErro(e.getMessage());
@@ -270,5 +282,9 @@ public class ReciboFormController implements Serializable{
 
 	public boolean isExibeFormUltimoPagamento() {
 		return exibeFormUltimoPagamento;
+	}
+	
+	public Recibo getUltimoPagamento() {
+		return ultimoPagamento;
 	}
 }

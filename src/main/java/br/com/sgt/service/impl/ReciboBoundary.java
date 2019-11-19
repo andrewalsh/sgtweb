@@ -70,6 +70,15 @@ public class ReciboBoundary implements Serializable, ReciboService{
 			throw new RuntimeException("Ocorreu um erro "+e.getMessage());
 		}
 	}
+	
+	@Override
+	public Recibo ultimoPagamentoDaTarifa(Long idValorAutorizado) {
+		try {
+			return reciboRepository.ultimoPagamentoDaTarifa(idValorAutorizado);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
 
 	/*@Override
 	public void enviarEmail(Recibo recibo) {
@@ -104,7 +113,7 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	private void acoesASeremExecutadasParaEstorno() {
 		acoes.add(estorno);
-		acoes.add(enviarEmailEstorno);
+		//acoes.add(enviarEmailEstorno);
 	}
 
 }

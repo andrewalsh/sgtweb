@@ -36,12 +36,12 @@ public class EstornoDoRecibo implements Serializable, AcaoAposGerarRecibo{
 	private void executaEstornoAnoDiferente(Recibo recibo) {
 		try {
 			recibo.setEstornado("S");
-			/*ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
+			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
 					recibo.getUltimoPagamento().getIdUltimoPagamento(),
 					recibo.getValorAutorizado().getIdValorAutorizado(), 
 					1, 
-					recibo.getAnoBase() -1));*/
-			reciboRepository.salavar(recibo);
+					recibo.getAnoBase() -1));
+			reciboRepository.excluir(recibo);
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Ocorreu um erro ao salvar o recibo no banco "+e.getMessage());
 		}
@@ -51,12 +51,12 @@ public class EstornoDoRecibo implements Serializable, AcaoAposGerarRecibo{
 	private void executaEstornoMesmoAno(Recibo recibo) {
 		try {
 			recibo.setEstornado("S");
-			/*ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
+			ultimoPagamentoService.salvar(new UltimoPagamentoDaTarifa(
 					recibo.getUltimoPagamento().getIdUltimoPagamento(),
 					recibo.getValorAutorizado().getIdValorAutorizado(), 
 					recibo.getMesBase() -1, 
-					recibo.getAnoBase()));*/
-			reciboRepository.salavar(recibo);
+					recibo.getAnoBase()));
+			reciboRepository.excluir(recibo);
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Ocorreu um erro ao salvar o recibo no banco "+e.getMessage());
 		}
