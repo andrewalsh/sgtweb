@@ -8,6 +8,7 @@ import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -58,6 +59,40 @@ public class ReciboDAO implements ReciboRepository, Serializable {
 		}
 		return toReturn;
 	}
+	
+	public void excluir(Recibo recibo) {
+		try {
+			dao.remove(recibo);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	public Recibo ultimoPagamentoDaTarifa(Long idValorAutorizado) {
+		String queryMaxIdRecibo = "select max(idRecibo)from Recibo r where r.valorAutorizado.idValorAutorizado=:idValorAutorizado";
+		Recibo recibo = new Recibo();
+		FiltroRecibo filtro = new FiltroRecibo();
+		
+		
+		try {
+			Query queryMax = em.createQuery(queryMaxIdRecibo).setParameter("idValorAutorizado", idValorAutorizado);
+			
+			Long ultimoPagamento = (Long) queryMax.getSingleResult();
+			
+			if (Objects.nonNull(ultimoPagamento)) {
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<Recibo> query = em.getCriteriaBuilder().createQuery(Recibo.class);
+				Root<Recibo> root = query.from(Recibo.class);
+				filtro.setIdRecibo(ultimoPagamento);
+				query.where(whereClausule(filtro, root, cb).toArray(new Predicate[0]));
+				recibo = em.createQuery(query).getSingleResult();
+			}
+			return recibo;
+		} catch (RuntimeException e) {
+			throw new RuntimeException("Ocorreu um erro ao buscar o último pagamento "+e.getMessage());
+		}
+	}
 
 	public List<Recibo> buscarPorFiltro(FiltroRecibo filtroRecibo) {
 		List<Recibo> recibos = new ArrayList<>();
@@ -97,6 +132,11 @@ public class ReciboDAO implements ReciboRepository, Serializable {
 		if(Objects.nonNull(filtro.getMesBase())) {
 			Path<Integer> mesBasePath = root.<Integer>get("mesBase");
 			predicates.add(cb.equal(mesBasePath, filtro.getMesBase()));
+		}
+		
+		if(Objects.nonNull(filtro.getIdRecibo())) {
+			Path<Integer> reciboPath = root.<Integer>get("idRecibo");
+			predicates.add(cb.equal(reciboPath, filtro.getIdRecibo()));
 		}
 		
 		return predicates;

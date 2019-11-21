@@ -11,6 +11,10 @@ public interface ReciboRepository {
 	
 	Recibo atualizar(Recibo valorAutorizado);
 	
+	Recibo ultimoPagamentoDaTarifa(Long idValorAutorizado);
+	
 	List<Recibo> buscarPorFiltro(FiltroRecibo filtroRecibo);
+	
+	void excluir(Recibo recibo);
 
 }

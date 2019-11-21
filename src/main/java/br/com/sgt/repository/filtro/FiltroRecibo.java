@@ -6,11 +6,18 @@ public class FiltroRecibo implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	private Long idRecibo;
 	private Long idSocio;
 	private String numeroRecibo;
 	private Integer anoBase;
 	private Integer mesBase;
 	
+	public Long getIdRecibo() {
+		return idRecibo;
+	}
+	public void setIdRecibo(Long idRecibo) {
+		this.idRecibo = idRecibo;
+	}
 	public Long getIdSocio() {
 		return idSocio;
 	}

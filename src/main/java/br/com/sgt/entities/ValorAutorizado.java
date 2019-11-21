@@ -32,7 +32,7 @@ public class ValorAutorizado implements Serializable{
 	@JoinColumn(name="ID_SOCIO", nullable=false)
 	private Socio socio;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="ID_TARIFA", nullable=false)
 	private Tarifa tarifa;
 

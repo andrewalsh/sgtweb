@@ -12,4 +12,7 @@ public interface ReciboService {
 	void salvar(Recibo recibo);
 	
 	void estorno(Recibo recibo);
+	
+	Recibo ultimoPagamentoDaTarifa(Long idValorAutorizado);
+	
 }

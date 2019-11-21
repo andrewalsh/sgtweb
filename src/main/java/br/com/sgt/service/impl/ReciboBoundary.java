@@ -23,10 +23,6 @@ public class ReciboBoundary implements Serializable, ReciboService{
 	
 	@Inject
 	private ReciboRepository reciboRepository;
-
-	/*
-	@Inject
-	private UltimoPagamentoService ultimoPagamentoService;*/
 	
 	@Inject
 	private SalvarReciboNoBanco salvarReciboNoBanco;
@@ -70,20 +66,16 @@ public class ReciboBoundary implements Serializable, ReciboService{
 			throw new RuntimeException("Ocorreu um erro "+e.getMessage());
 		}
 	}
+	
+	@Override
+	public Recibo ultimoPagamentoDaTarifa(Long idValorAutorizado) {
+		try {
+			return reciboRepository.ultimoPagamentoDaTarifa(idValorAutorizado);
+		} catch (RuntimeException e) {
+			throw e;
+		}
+	}
 
-	/*@Override
-	public void enviarEmail(Recibo recibo) {
-		if(Objects.nonNull(recibo.getValorAutorizado().getSocio().getPessoa().getEmail())) {
-			try {
-				enviar(recibo);
-			} catch (Exception e) {
-				throw e;
-			}
-		}
-		else {
-			return;
-		}
-	}*/
 	
 	@Override
 	public List<Recibo> listar(FiltroRecibo filtro) {
