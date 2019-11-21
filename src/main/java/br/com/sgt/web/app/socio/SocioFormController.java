@@ -197,6 +197,7 @@ public class SocioFormController implements Serializable{
 	public void estornarRecibo() {
 		try {
 			reciboService.estorno(recibo);
+			helper.notificacaoSucesso("Estorno do recibo realizado com sucesso.");
 		} catch (RuntimeException e) {
 			helper.notificarErro(e.getMessage());
 		}

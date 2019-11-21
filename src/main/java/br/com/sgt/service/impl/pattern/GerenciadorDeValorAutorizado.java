@@ -14,7 +14,7 @@ public class GerenciadorDeValorAutorizado implements Serializable{
 		if(naoPossuiEstaTarifaAssocioada(valorAutorizado, valoresAutorizados))
 			return true;
 		else
-			throw new RuntimeException("A tarifa informa já está associada ao sócio.");
+			throw new RuntimeException("A tarifa selecionada já está vinculada ao sócio.");
 		
 	}
 

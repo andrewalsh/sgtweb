@@ -136,10 +136,17 @@ and open the template in the editor.
 				<p:tab title="Histórico de Recibos">
 					<p:commandButton
 						id="estorno" value="Estornar Recibo"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"
+    					update="tblRecibos"
 						actionListener="#{socioFormController.estornarRecibo()}"/>
 						
 					<p:commandButton
 						id="segundaVia" value="2ª via do Recibo"
+						onstart="PF('statusDialog').show();"
+    					onsuccess="PF('statusDialog').hide();"
+    					onerror="PF('statusDialog').hide();"
 						actionListener="#{socioFormController.imprimirSegundaViaDoSocio()}"/>	
 					
 					<p:dataTable 

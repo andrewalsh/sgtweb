@@ -80,17 +80,14 @@ public class ReciboDAO implements ReciboRepository, Serializable {
 			
 			Long ultimoPagamento = (Long) queryMax.getSingleResult();
 			
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Recibo> query = em.getCriteriaBuilder().createQuery(Recibo.class);
-			Root<Recibo> root = query.from(Recibo.class);
-			
-			filtro.setIdRecibo(ultimoPagamento);
-			
-			query.where(whereClausule(filtro, root, cb)
-					.toArray(new Predicate[0]));
-			
-			recibo = em.createQuery(query).getSingleResult();
-			
+			if (Objects.nonNull(ultimoPagamento)) {
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<Recibo> query = em.getCriteriaBuilder().createQuery(Recibo.class);
+				Root<Recibo> root = query.from(Recibo.class);
+				filtro.setIdRecibo(ultimoPagamento);
+				query.where(whereClausule(filtro, root, cb).toArray(new Predicate[0]));
+				recibo = em.createQuery(query).getSingleResult();
+			}
 			return recibo;
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Ocorreu um erro ao buscar o último pagamento "+e.getMessage());
