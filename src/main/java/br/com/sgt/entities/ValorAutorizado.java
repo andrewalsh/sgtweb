@@ -35,6 +35,9 @@ public class ValorAutorizado implements Serializable{
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="ID_TARIFA", nullable=false)
 	private Tarifa tarifa;
+	
+	@Column(name="ID_USUARIO", nullable=false)
+	private Long idUsuario;
 
 	@Column(name="VALOR_LIQUIDO", precision=2, scale=2, nullable=true)
 	private BigDecimal valorLiquido;
@@ -88,6 +91,14 @@ public class ValorAutorizado implements Serializable{
 
 	public void setTarifa(Tarifa tarifa) {
 		this.tarifa = tarifa;
+	}
+	
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+	
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public BigDecimal getValorLiquido() {

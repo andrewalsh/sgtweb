@@ -22,6 +22,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import br.com.sgt.entities.dto.UsuarioDTO;
+
 
 @Table(name="T_RECIBO")
 @Entity
@@ -67,6 +69,9 @@ public class Recibo implements Serializable{
 	@Transient
 	private UltimoPagamentoDaTarifa ultimoPagamento;
 	
+	@Transient
+	private UsuarioDTO usuarioDTO;
+	
 	
 	public Recibo() {
 		setAnoBase(anoCorrente());
@@ -77,100 +82,63 @@ public class Recibo implements Serializable{
 	public Long getIdRecibo() {
 		return idRecibo;
 	}
-
-
 	public void setIdRecibo(Long idRecibo) {
 		this.idRecibo = idRecibo;
 	}
-
-
 	public int getAnoBase() {
 		return anoBase;
 	}
-
-
 	public void setAnoBase(int anoBase) {
 		this.anoBase = anoBase;
 	}
-
-
 	public int getMesBase() {
 		return mesBase;
 	}
-
-
 	public void setMesBase(int mesBase) {
 		this.mesBase = mesBase;
 	}
-
-
 	public Date getDataPagamento() {
 		return dataPagamento;
 	}
-
-
 	public void setDataPagamento(Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
 	}
-
-
 	public String getFormaPagamento() {
 		return formaPagamento;
 	}
-
-
 	public void setFormaPagamento(String formaPagamento) {
 		this.formaPagamento = formaPagamento;
 	}
-
-
 	public String getNumeroRecibo() {
 		return numeroRecibo;
 	}
-
-
 	public void setNumeroRecibo(String numeroRecibo) {
 		this.numeroRecibo = numeroRecibo;
 	}
-
-
 	public BigDecimal getValorRecibo() {
 		return valorRecibo;
 	}
-
-
 	public void setValorRecibo(BigDecimal valorRecibo) {
 		this.valorRecibo = valorRecibo;
 	}
-
-
 	public Terreiro getIdTerreiro() {
 		return terreiro;
 	}
-
-
 	public void setTerreiro(Terreiro terreiro) {
 		this.terreiro = terreiro;
 	}
-
-
 	public ValorAutorizado getValorAutorizado() {
 		return valorAutorizado;
 	}
-
-
 	public void setValorAutorizado(ValorAutorizado valorAutorizado) {
 		this.valorAutorizado = valorAutorizado;
-	}
-	
+	}	
 	public Terreiro getTerreiro() {
 		return terreiro;
 	}
-	
 	public UltimoPagamentoDaTarifa getUltimoPagamento() {
 		return ultimoPagamento;
 	}
-
 	public void setUltimoPagamento(UltimoPagamentoDaTarifa ultimoPagamento) {
 		this.ultimoPagamento = ultimoPagamento;
 	}
@@ -179,6 +147,12 @@ public class Recibo implements Serializable{
 	}
 	public void setEstornado(String estornado) {
 		this.estornado = estornado;
+	}
+	public UsuarioDTO getUsuarioDTO() {
+		return usuarioDTO;
+	}
+	public void setUsuarioDTO(UsuarioDTO usuarioDTO) {
+		this.usuarioDTO = usuarioDTO;
 	}
 
 	@Override

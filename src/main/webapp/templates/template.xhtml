@@ -52,6 +52,11 @@
 						<p:menuitem value="Recibos" outcome="/pages/recibo/recibo_form.xhtml" icon="fa fa-list-alt"/>
 					</p:submenu>
 				</p:panelMenu>
+				<p:commandButton value="Sair do sistema" style="width:100%"
+					onstart="PF('statusDialog').show();"
+    				onsuccess="PF('statusDialog').hide();"
+    				onerror="PF('statusDialog').hide();"
+					action="#{usuarioFormController.encerraSessao()}" />
 			</h:panelGroup>
 			
 		</aside>

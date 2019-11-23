@@ -25,15 +25,15 @@ import br.com.sgt.entities.Socio;
 import br.com.sgt.entities.Tarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
+import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.helper.MessageHelper;
+import br.com.sgt.helper.UsuarioLogado;
 import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.repository.filtro.FiltroRecibo;
 import br.com.sgt.repository.filtro.FiltroTarifa;
-import br.com.sgt.repository.filtro.FiltroUltimoPagamento;
 import br.com.sgt.service.api.ReciboService;
 import br.com.sgt.service.api.SocioService;
 import br.com.sgt.service.api.TarifaService;
-import br.com.sgt.service.api.UltimoPagamentoService;
 import br.com.sgt.service.api.ValorAutorizadoService;
 
 @Named("socioFormController")
@@ -43,6 +43,8 @@ public class SocioFormController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private SocioDTO dto = new SocioDTO();
+	
+	private UsuarioDTO usuarioDTO = new UsuarioDTO();
 	
 	private Socio socio;
 	
@@ -84,10 +86,11 @@ public class SocioFormController implements Serializable{
 	private MessageHelper helper;
 	
 	@Inject
-	private ImprimirRecibo imprimirRecibo;
+	private UsuarioLogado usuarioLogado;
 	
 	@Inject
-	private UltimoPagamentoService ultimoPagamentoService;
+	private ImprimirRecibo imprimirRecibo;
+	
 	
 	@PostConstruct
 	public void init() {
@@ -100,6 +103,7 @@ public class SocioFormController implements Serializable{
 	        facesContext.addMessage(null, facesMessage);
 		}
 		va = valorAutorizadoService.valorAutorizadoBuilder();
+		usuarioDTO = usuarioLogado.exibeLogado();
 		//getParams();
 	}
 	
@@ -168,13 +172,15 @@ public class SocioFormController implements Serializable{
 	
 	public void onRowReciboDblClckSelect(SelectEvent event) {
 		recibo = (Recibo) event.getObject();
-		recibo.setUltimoPagamento(ultimoPagamentoService.
-				buscarPorFiltro(new FiltroUltimoPagamento(recibo.getValorAutorizado().getIdValorAutorizado())));
+		recibo.setUsuarioDTO(usuarioDTO);
+		/*recibo.setUltimoPagamento(ultimoPagamentoService.
+				buscarPorFiltro(new FiltroUltimoPagamento(recibo.getValorAutorizado().getIdValorAutorizado())));*/
 		//imprimirRecibo.executa(recibo);
 	}
 	
 	public void salvarValorAutorizado() {
 		try {
+			va.setIdUsuario(usuarioDTO.getIdUsuario());
 			va.setSocio(socio);
 			valorAutorizadoService.salvar(va);
 			helper.notificacaoSucesso("Operação realizada com sucesso.");

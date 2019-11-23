@@ -18,6 +18,10 @@ public class UsuarioBoundary implements UsuarioService, Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	private static final String VAZIO = ""; 
+	
+	private static final String CPF_SENHA_INVALIDO = "CPF e/ou senha inválidos";
+	
 	@Inject
 	private UsuarioRepository usuarioRepository;
 
@@ -35,15 +39,20 @@ public class UsuarioBoundary implements UsuarioService, Serializable{
 
 	@Override
 	public UsuarioDTO autenticar(FiltroUsuario filtroUsuario) {
-		try {
-			UsuarioDTO usuario = new UsuarioDTO();
-			usuario = usuarioRepository.login(filtroUsuario);
-			if(Objects.nonNull(usuario))
-				return usuario;
-			else
-				throw new RuntimeException("CPF e/ou senha inválidos");
-		} catch (RuntimeException e) {
-			throw e;
+		if(filtroUsuario.getLogin().equals(VAZIO) || filtroUsuario.getSenha().equals(VAZIO))
+			throw new RuntimeException(CPF_SENHA_INVALIDO);
+		else {
+			try {
+				UsuarioDTO usuario = new UsuarioDTO();
+				usuario = usuarioRepository.login(filtroUsuario);
+				if(Objects.nonNull(usuario))
+					return usuario;
+				else
+					throw new RuntimeException(CPF_SENHA_INVALIDO);
+			} catch (RuntimeException e) {
+				throw e;
+			}
 		}
+		
 	}
 }

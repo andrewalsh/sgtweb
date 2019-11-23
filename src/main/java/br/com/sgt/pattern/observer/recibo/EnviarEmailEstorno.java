@@ -71,6 +71,7 @@ public class EnviarEmailEstorno implements Serializable, AcaoAposGerarRecibo{
 					+ recibo.getValorAutorizado().getTarifa().getNomeTarifa() + "\n" + "Mês/Ano: "
 					+ recibo.getMesBase() + "/" + recibo.getAnoBase() + "\n" + "Valor pago: R$ " + recibo.getValorRecibo()
 					+ "\n" + "Data de pagamento: " + DateFormat.getDateInstance().format(recibo.getDataPagamento())
+					+ "\n" + "Estornado realizado por: "+recibo.getUsuarioDTO().getNome()
 					+ "\n" + "--------------------------------------------------------------");
 
 			Transport.send(message);

@@ -21,7 +21,9 @@ import br.com.sgt.entities.Terreiro;
 import br.com.sgt.entities.UltimoPagamentoDaTarifa;
 import br.com.sgt.entities.ValorAutorizado;
 import br.com.sgt.entities.dto.SocioDTO;
+import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.helper.MessageHelper;
+import br.com.sgt.helper.UsuarioLogado;
 import br.com.sgt.pattern.builder.ValorAutorizadoBuilder;
 import br.com.sgt.pattern.observer.recibo.ImprimirRecibo;
 import br.com.sgt.repository.filtro.FiltroSocio;
@@ -46,6 +48,8 @@ public class ReciboFormController implements Serializable{
 	
 	private UltimoPagamentoDaTarifa ultimoPagamentoDaTarifa = new UltimoPagamentoDaTarifa();
 	
+	private UsuarioDTO usuarioDTO = new UsuarioDTO();
+	
 	private Long idSocio;
 	
 	private String nomeSocio;
@@ -69,6 +73,9 @@ public class ReciboFormController implements Serializable{
 	
 	@Inject
 	private MessageHelper helper;
+	
+	@Inject
+	private UsuarioLogado usuarioLogado;
 	
 	private FiltroValorAutorizado filtroValorAutorizado = new FiltroValorAutorizado();
 	
@@ -118,6 +125,8 @@ public class ReciboFormController implements Serializable{
 
 	public void gerarRecibo() {
 		try {
+			usuarioDTO = usuarioLogado.exibeLogado();
+			recibo.setUsuarioDTO(usuarioDTO);
 			reciboService.salvar(recibo);
 			
 	        helper.notificacaoSucesso("Operação realizada com sucesso!");
