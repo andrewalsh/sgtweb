@@ -22,6 +22,8 @@ import br.com.sgt.repository.filtro.FiltroUsuario;
 
 public class UsuarioDAO implements UsuarioRepository {
 	
+	private static final String ERRO_LISTAGEM = "Ocorreu um erro ao carregar a lista de usuários ";
+	
 	@Inject
 	private EntityManager em;
 	
@@ -69,6 +71,28 @@ public class UsuarioDAO implements UsuarioRepository {
 		}
 		return usuarios;
 	}
+	
+	public List<UsuarioDTO> listarUsuarios(FiltroUsuario filtroUsuario){
+		
+		try {
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<UsuarioDTO> query = em.getCriteriaBuilder().createQuery(UsuarioDTO.class);
+			Root<Usuario> root = query.from(Usuario.class);
+			
+			query.select(cb.construct(UsuarioDTO.class, 
+					root.<Long>get("idUsuario"),
+					root.<String>get("usuarioAtivo"),
+					root.<Pessoa>get("pessoa").<String>get("nome"),
+					root.<Pessoa>get("pessoa").<String>get("cpf")));
+			
+			query.where(whereClausule(filtroUsuario, root, cb)
+					.toArray(new Predicate[0]));
+			
+			return em.createQuery(query).getResultList();
+		} catch (RuntimeException e) {
+			throw new RuntimeException(ERRO_LISTAGEM + e.getMessage());
+		}
+	}
 
 	
 	public UsuarioDTO login(FiltroUsuario filtroUsuario) {
@@ -111,6 +135,11 @@ public class UsuarioDAO implements UsuarioRepository {
 		if(Objects.nonNull(filtro.getSenha()) && !filtro.getSenha().isEmpty()) {
 			Path<String> senhaPath = root.<String>get("senha");
 			predicates.add(cb.equal(senhaPath, filtro.getSenha()));
+		}
+		
+		if(Objects.nonNull(filtro.getAtivo()) && !filtro.getAtivo().isEmpty()) {
+			Path<String> ativoPath = root.<String>get("usuarioAtivo");
+			predicates.add(cb.equal(ativoPath, filtro.getAtivo()));
 		}
 		
 		return predicates;

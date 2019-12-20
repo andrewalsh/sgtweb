@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -18,7 +17,6 @@ import br.com.sgt.helper.MessageHelper;
 import br.com.sgt.helper.UsuarioLogado;
 import br.com.sgt.repository.filtro.FiltroUsuario;
 import br.com.sgt.service.api.UsuarioService;
-import javassist.expr.Instanceof;
 
 @Named("usuarioFormController")
 @ViewScoped

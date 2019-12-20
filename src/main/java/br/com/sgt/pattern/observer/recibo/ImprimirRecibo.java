@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import br.com.sgt.entities.Recibo;
 import br.com.sgt.entities.dto.ReciboDTO;
@@ -17,9 +19,33 @@ public class ImprimirRecibo implements Serializable, AcaoAposGerarRecibo{
 	private static final long serialVersionUID = 1L;
 	
 	private void imprimir() throws IOException {
-		FacesContext.getCurrentInstance().getExternalContext()
-				.redirect("/sgt/relatorioServlet");
+		try {
+			FacesContext.getCurrentInstance().getExternalContext()
+			.redirect("/sgt/relatorioServlet");
+		} catch (RuntimeException e) {
+			throw new RuntimeException("####### ERRO ####### "+e.getMessage());
+		}
 		
+		/*HttpServletResponse response= (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		try {
+			byte[] bytes = ReportUtil.criarRelatorio();
+			StringBuilder titulo = new StringBuilder();
+			gerarTituloRecibo(ReportUtil.getRelatorio());
+			
+			if(bytes != null && bytes.length > 0){
+				//response.setContentType("application/pdf");
+				response.setContentType("application/force-download");
+				response.setHeader("Content-Disposition", "attachment;filename=\""+ gerarTituloRecibo(ReportUtil.getRelatorio()) + ".pdf\";");
+				response.setContentLength(bytes.length);
+				ServletOutputStream ouputStream = response.getOutputStream();
+				ouputStream.write(bytes, 0, bytes.length);
+				ouputStream.flush();
+				ouputStream.close();
+			}
+			//FacesContext.getCurrentInstance().responseComplete();
+		} catch (IllegalStateException | IOException e) {
+			System.out.println(e.getMessage());
+		}*/
 	}
 
 	@Override
@@ -34,14 +60,9 @@ public class ImprimirRecibo implements Serializable, AcaoAposGerarRecibo{
 		new ReportUtil(realpath, fonteDeDados);
 		try {
 			imprimir();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException | RuntimeException e) {
+			System.out.println(e.getMessage());
 		}
-		System.out.println("");
-		
-		
-		
 		
 	}
 
@@ -68,5 +89,17 @@ public class ImprimirRecibo implements Serializable, AcaoAposGerarRecibo{
 		return dto;
 	}
 	
+	private String gerarTituloRecibo(List<?> resultList){
+		StringBuilder titulo = new StringBuilder();
+		
+		if(resultList != null && resultList.size() > 0){
+			ReciboDTO dto = new ReciboDTO();
+			dto = (ReciboDTO) resultList.get(0);
+			titulo.append("Recibo - ");
+			titulo.append(dto.getNumeroRecibo());
+		}
+		
+		return titulo.toString();
+	}
 	
 }

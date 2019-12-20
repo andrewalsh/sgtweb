@@ -25,7 +25,7 @@ import javax.persistence.Transient;
 import br.com.sgt.entities.dto.UsuarioDTO;
 
 
-@Table(name="T_RECIBO")
+@Table(name="t_recibo")
 @Entity
 public class Recibo implements Serializable{
 

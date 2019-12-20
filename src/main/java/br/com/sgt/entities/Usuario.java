@@ -44,6 +44,14 @@ public class Usuario implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	public Usuario(Long idUsuario, String usuarioAtivo, Pessoa pessoa) {
+		this.idUsuario = idUsuario;
+		this.usuarioAtivo = usuarioAtivo;
+		this.pessoa = pessoa;
+	}
+
 
 
 	public Long getIdUsuario() {

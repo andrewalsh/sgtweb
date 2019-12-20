@@ -1,6 +1,7 @@
 package br.com.sgt.service.impl;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import javax.faces.context.ExternalContext;
@@ -8,6 +9,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
+import br.com.sgt.entities.Usuario;
 import br.com.sgt.entities.dto.UsuarioDTO;
 import br.com.sgt.repository.api.UsuarioRepository;
 import br.com.sgt.repository.filtro.FiltroUsuario;
@@ -54,5 +56,14 @@ public class UsuarioBoundary implements UsuarioService, Serializable{
 			}
 		}
 		
+	}
+
+	@Override
+	public List<UsuarioDTO> listarUsuarios(FiltroUsuario filtroUsuario) {
+		try {
+			return usuarioRepository.listarUsuarios(filtroUsuario);
+		} catch (RuntimeException e) {
+			throw e;
+		}
 	}
 }

@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Table(name="T_VALOR_AUTORIZADO")
+@Table(name="t_valor_autorizado")
 @Entity
 public class ValorAutorizado implements Serializable{
 

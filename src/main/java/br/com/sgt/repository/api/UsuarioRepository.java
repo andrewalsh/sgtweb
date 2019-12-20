@@ -14,6 +14,8 @@ public interface UsuarioRepository {
 	
 	List<UsuarioDTO> buscarPorFiltro(FiltroUsuario filtroUsuario);
 	
+	List<UsuarioDTO> listarUsuarios(FiltroUsuario filtroUsuario);
+	
 	UsuarioDTO login(FiltroUsuario filtroUsuario);
 	
 	void excluir(Usuario usuario);
