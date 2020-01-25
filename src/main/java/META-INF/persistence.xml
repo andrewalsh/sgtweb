@@ -19,9 +19,16 @@
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			
+			<!-- remoto -->
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://sgt.mysql.uhserver.com/sgt"/>
 			<property name="javax.persistence.jdbc.user" value="dbasgt" />
 			<property name="javax.persistence.jdbc.password" value="theo@2014" />
+			
+			<!-- local -->
+			<!-- <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/teo_db"/>
+			<property name="javax.persistence.jdbc.user" value="root" />
+			<property name="javax.persistence.jdbc.password" value="walsh" /> -->
 
 			<property name="hibernate.hbm2ddl.auto" value="none" />
 			<property name="hibernate.show_sql" value="true" />

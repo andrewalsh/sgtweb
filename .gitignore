@@ -12,3 +12,4 @@
 target/classes/META-INF/persistence.xml
 
 target/m2e-wtp/web-resources/META-INF/maven/br.com.sgt/sgt/pom.properties
+/target/
